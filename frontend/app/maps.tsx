@@ -1,9 +1,12 @@
-import { View, Text, StyleSheet } from 'react-native';
+import MapView from '@/components/maps/mapView';
+import SearchBar from '@/components/maps/searchBar';
+import { View, StyleSheet } from 'react-native';
 
 export default function MapsPage() {
   return (
     <View style={styles.container}>
-      <Text>Maps</Text>
+      <MapView />
+      <SearchBar />
     </View>
   );
 }

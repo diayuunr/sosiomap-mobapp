@@ -1,9 +1,12 @@
-import { View, Text, StyleSheet } from 'react-native';
+import Greetings from '@/components/home/greetings';
+import { View, StyleSheet } from 'react-native';
+import InteractiveMap from '@/components/home/maps';
 
 export default function HomePage() {
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
+      <Greetings />
+      <InteractiveMap zones={[]} />
     </View>
   );
 }
@@ -13,5 +16,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
   },
 });

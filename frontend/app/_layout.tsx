@@ -1,7 +1,21 @@
 import { Tabs } from "expo-router";
-import Feather from '@expo/vector-icons/Feather';
+import Feather from "@expo/vector-icons/Feather";
+import { useFonts } from "expo-font";
+import "../global.css";
 
 export default function TabLayout() {
+  const [fontsLoaded] = useFonts({
+    MplusBlack: require("../assets/font/MPLUSRounded1c-Black.ttf"),
+    MplusExtraBold: require("../assets/font/MPLUSRounded1c-ExtraBold.ttf"),
+    MplusBold: require("../assets/font/MPLUSRounded1c-Bold.ttf"),
+    MplusMedium: require("../assets/font/MPLUSRounded1c-Medium.ttf"),
+    MplusRegular: require("../assets/font/MPLUSRounded1c-Regular.ttf"),
+    MplusLight: require("../assets/font/MPLUSRounded1c-Light.ttf"),
+    MplusThin: require("../assets/font/MPLUSRounded1c-Thin.ttf"),
+  });
+
+  if (!fontsLoaded) return null;
+
   return (
     <Tabs
       screenOptions={{
@@ -10,11 +24,17 @@ export default function TabLayout() {
         tabBarActiveTintColor: "#2563eb",
         tabBarInactiveTintColor: "#9ca3af",
 
+        tabBarLabelStyle: {
+          fontFamily: "MplusBold",
+          fontSize: 12,
+          marginTop: 4,
+        },
+
         tabBarStyle: {
           position: "absolute",
 
           bottom: 25,
-          marginHorizontal: 40,
+          marginHorizontal: 20,
 
           paddingTop: 10,
           paddingBottom: 10,
@@ -39,7 +59,7 @@ export default function TabLayout() {
         name="home"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Feather name="home" size={24} color={color} />
           ),
         }}
@@ -49,7 +69,7 @@ export default function TabLayout() {
         name="maps"
         options={{
           title: "Maps",
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Feather name="map" size={24} color={color} />
           ),
         }}
@@ -59,7 +79,7 @@ export default function TabLayout() {
         name="export"
         options={{
           title: "Export",
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Feather name="file" size={24} color={color} />
           ),
         }}
