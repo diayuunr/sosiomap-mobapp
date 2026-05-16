@@ -20,7 +20,7 @@ export default function SearchBar({
 }: SearchBarProps) {
   return (
     <View 
-      className="mx-4 mt-14 px-4 py-1 rounded-xl"
+      className="mx-6 mt-14 px-4 py-1 rounded-xl"
       style={{ 
         backgroundColor: Colors.card,
         shadowColor: '#000',
