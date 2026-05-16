@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { ChevronDown, TrendingUp } from 'lucide-react-native';
 import { LineChart } from 'react-native-gifted-charts';
 import { trendData } from '@/constants/dummyData';
@@ -17,9 +17,11 @@ export default function TrendChart() {
     label: item.date,
   }));
 
+  const screenWidth = Dimensions.get('window').width;
+
   return (
     <View 
-      className="px-5 py-5 bg-white rounded-2xl mx-7 my-3"
+      className="px-5 py-5 rounded-2xl mx-7 my-3"
       style={{ 
         backgroundColor: 'rgba(255,255,255,0.95)',
         shadowColor: '#000',
@@ -56,7 +58,7 @@ export default function TrendChart() {
         <View className="flex-col items-start">
         <Text className="text-sm font-semibold" style={{ color: Colors.primary }}>Periode</Text>
         <TouchableOpacity 
-          className="flex-row items-center justify-content px-3 py-1.5 rounded-lg border w-[90px]"
+          className="flex-row items-center justify-between px-3 py-1.5 rounded-lg border w-[90px]"
           style={{ borderColor: Colors.border }}
           onPress={() => setShowDropdown(!showDropdown)}
         >
@@ -124,15 +126,20 @@ export default function TrendChart() {
       <LineChart
         data={chartData}
         height={180}
-        spacing={45}
-        initialSpacing={10}
+        width={screenWidth - 72}
+        spacing={40}
+        initialSpacing={40}
+        endSpacing={20}
         color={Colors.accent}
         thickness={3}
         hideDataPoints
         hideRules
         hideYAxisText
         yAxisColor="transparent"
+        yAxisLabelWidth={0}
+        yAxisThickness={0}
         xAxisColor={Colors.border}
+        xAxisLength={310}
         xAxisLabelTextStyle={{ 
           color: Colors.gray, 
           fontSize: 9,
@@ -153,8 +160,8 @@ export default function TrendChart() {
           pointerLabelComponent: (items: any) => {
             return (
               <View 
-                className="w-full rounded-lg items-center justify-center"
-                style={{ backgroundColor: Colors.accent, minWidth: 70, }}
+                className="rounded-lg items-center justify-center"
+                style={{ backgroundColor: Colors.accent, minWidth: 60, }}
               >
                 <Text className="px-2 py-1 text-white text-xs font-semibold" numberOfLines={1}>
                   Rp {items[0]?.value} M

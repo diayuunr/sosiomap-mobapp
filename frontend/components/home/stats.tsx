@@ -20,22 +20,22 @@ export default function StatsSection() {
           title="Total Wajib Pajak"
           value={dummyStats.totalWajibPajak.toLocaleString('id-ID')}
           change={dummyStats.wajibPajakChange}
-          icon={<Users size={20} color={Colors.primary} />}
-          iconBg="#E0F2FE"
+          icon={<Users size={20} color={Colors.red} />}
+          iconBg={`${Colors.red}33`}
         />
         <StatCard
           title="Total Tunggakan"
           value={dummyStats.totalTunggakan}
           change={dummyStats.tunggakanChange}
           icon={<Wallet size={20} color={Colors.primary} />}
-          iconBg="#E0F2FE"
+          iconBg={`${Colors.primary}33`}
         />
         <StatCard
           title="Persentase Kepatuhan"
           value={`${dummyStats.persentaseKepatuhan}%`}
           change={dummyStats.kepatuhanChange}
           icon={<Target size={20} color={Colors.accent} />}
-          iconBg={Colors.yellowLight}
+          iconBg={`${Colors.accent}33`}
         />
       </View>
     </View>

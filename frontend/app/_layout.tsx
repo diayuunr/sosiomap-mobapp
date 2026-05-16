@@ -27,7 +27,7 @@ export default function TabLayout() {
         tabBarLabelStyle: {
           fontFamily: "MplusBold",
           fontSize: 12,
-          marginTop: 4,
+          marginTop: 0,
         },
 
         tabBarStyle: {
@@ -36,8 +36,8 @@ export default function TabLayout() {
           bottom: 25,
           marginHorizontal: 20,
 
-          paddingTop: 10,
-          paddingBottom: 10,
+          paddingTop: 7,
+          paddingBottom: 7,
 
           elevation: 0,
 

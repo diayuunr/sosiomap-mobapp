@@ -25,7 +25,7 @@ export default function StatCard({
 
   return (
     <View 
-      className="flex-1 rounded-2xl p-3 mx-1 items-center justify-center shadow-lg"
+      className="flex-1 rounded-2xl p-3.5 mx-1 items-center justify-center shadow-lg"
       style={{ backgroundColor: Colors.card }}
     >
       {/* Icon */}
@@ -38,8 +38,8 @@ export default function StatCard({
 
       {/* Title */}
       <Text 
-        className="text-xs mb-1 text-center"
-        style={{ color: Colors.textMuted }}
+        className="text-xs text-center font-medium mb-1"
+        style={{ color: Colors.primary }}
       >
         {title}
       </Text>
@@ -47,7 +47,7 @@ export default function StatCard({
       {/* Value */}
       <Text 
         className="text-lg font-bold"
-        style={{ color: Colors.textPrimary }}
+        style={{ color: Colors.primary }}
       >
         {value}
       </Text>
