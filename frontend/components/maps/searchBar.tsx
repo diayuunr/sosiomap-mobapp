@@ -20,7 +20,7 @@ export default function SearchBar({
 }: SearchBarProps) {
   return (
     <View 
-      className="mx-4 mt-14 px-4 py-3 rounded-xl"
+      className="mx-4 mt-14 px-4 py-1 rounded-xl"
       style={{ 
         backgroundColor: Colors.card,
         shadowColor: '#000',
@@ -33,7 +33,7 @@ export default function SearchBar({
       <View className="flex-row items-center">
         {/* Text Input */}
         <TextInput
-          className="flex-1 text-sm"
+          className="flex-1 text-md"
           style={{ color: Colors.textPrimary }}
           placeholder="Cari Wilayah..."
           placeholderTextColor={Colors.textMuted}
