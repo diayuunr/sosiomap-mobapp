@@ -1,10 +1,8 @@
-// components/maps/FilterSheet.tsx
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal } from 'react-native';
-import { X, SlidersHorizontal } from 'lucide-react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Colors } from '@/constants/colors';
 
-interface FilterSheetProps {
+interface FilterPanelProps {
   visible: boolean;
   onClose: () => void;
   filters: {
@@ -17,7 +15,9 @@ interface FilterSheetProps {
 const wilayahOptions = ['Kecamatan', 'Kota'];
 const kelompokOptions = ['Pensiunan', 'Pegawai Negeri', 'UMKM', 'Wirausaha'];
 
-export default function FilterSearch({ visible, onClose, filters, onFilterChange }: FilterSheetProps) {
+export default function FilterPanel({ visible, onClose, filters, onFilterChange }: FilterPanelProps) {
+  if (!visible) return null;
+
   const toggleKelompok = (kelompok: string) => {
     const current = filters.kelompok;
     if (current.includes(kelompok)) {
@@ -34,43 +34,28 @@ export default function FilterSearch({ visible, onClose, filters, onFilterChange
   };
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={onClose}
+    <View 
+      className="mx-4 mt-1 rounded-2xl overflow-hidden"
+      style={{ 
+        backgroundColor: Colors.card,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+        elevation: 5,
+        maxHeight: 400,
+      }}
     >
-      <View className="flex-1 bg-black/40">
-        <TouchableOpacity className="flex-1" onPress={onClose} />
-        
-        <View 
-          className="rounded-t-3xl p-5"
-          style={{ backgroundColor: Colors.card }}
-        >
-          {/* Header */}
-          <View className="flex-row items-center justify-between mb-5">
-            <Text 
-              className="text-lg font-semibold"
-              style={{ color: Colors.textPrimary }}
-            >
-              Cibeber
-            </Text>
-            <View className="flex-row items-center gap-3">
-              <TouchableOpacity onPress={onClose}>
-                <X size={24} color={Colors.textPrimary} />
-              </TouchableOpacity>
-              <SlidersHorizontal size={20} color={Colors.primary} />
-            </View>
-          </View>
-
-          {/* Wilayah */}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Wilayah */}
+        <View className="px-7 py-3 mt-2">
           <Text 
-            className="text-sm font-medium mb-3"
+            className="text-md font-medium mb-3"
             style={{ color: Colors.textPrimary }}
           >
             Wilayah
           </Text>
-          <View className="flex-row mb-5">
+          <View className="flex-row">
             {wilayahOptions.map((option) => (
               <TouchableOpacity
                 key={option}
@@ -92,15 +77,17 @@ export default function FilterSearch({ visible, onClose, filters, onFilterChange
               </TouchableOpacity>
             ))}
           </View>
+        </View>
 
-          {/* Kelompok Ekonomi */}
+        {/* Kelompok Ekonomi */}
+        <View className="px-7 py-3">
           <Text 
-            className="text-sm font-medium mb-3"
+            className="text-md font-medium mb-3"
             style={{ color: Colors.textPrimary }}
           >
             Kelompok Ekonomi
           </Text>
-          <View className="flex-row flex-wrap mb-5">
+          <View className="flex-row flex-wrap">
             {kelompokOptions.map((option) => {
               const isSelected = filters.kelompok.includes(option);
               return (
@@ -125,36 +112,36 @@ export default function FilterSearch({ visible, onClose, filters, onFilterChange
               );
             })}
           </View>
-
-          {/* Buttons */}
-          <View className="flex-row justify-end gap-3">
-            <TouchableOpacity
-              className="px-6 py-3 rounded-lg border"
-              style={{ borderColor: Colors.border }}
-              onPress={() => onFilterChange({ wilayah: 'Kecamatan', kelompok: [] })}
-            >
-              <Text 
-                className="text-sm font-medium"
-                style={{ color: Colors.textPrimary }}
-              >
-                Reset
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="px-6 py-3 rounded-lg"
-              style={{ backgroundColor: Colors.accent }}
-              onPress={onClose}
-            >
-              <Text 
-                className="text-sm font-semibold"
-                style={{ color: Colors.primaryDark }}
-              >
-                Terapkan
-              </Text>
-            </TouchableOpacity>
-          </View>
         </View>
-      </View>
-    </Modal>
+
+        {/* Buttons */}
+        <View className="flex-row justify-end px-7 py-3 pb-5 gap-3">
+          <TouchableOpacity
+            className="px-5 py-2 rounded-lg border"
+            style={{ borderColor: Colors.border }}
+            onPress={() => onFilterChange({ wilayah: 'Kecamatan', kelompok: [] })}
+          >
+            <Text 
+              className="text-sm font-medium"
+              style={{ color: Colors.textPrimary }}
+            >
+              Reset
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="px-5 py-2.5 rounded-lg"
+            style={{ backgroundColor: Colors.accent }}
+            onPress={onClose}
+          >
+            <Text 
+              className="text-sm font-semibold"
+              style={{ color: Colors.primaryDark }}
+            >
+              Terapkan
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
   );
 }

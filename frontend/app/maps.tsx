@@ -1,10 +1,10 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { View, StatusBar, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Polygon, Marker } from 'react-native-maps';
 import SearchBar from '@/components/maps/searchBar';
 import MapLegend from '@/components/maps/mapLegend';
-import FilterSearch from '@/components/maps/filterSearch';
+import FilterPanel from '@/components/maps/filterSearch';
 import ZonePeek from '@/components/maps/zonePeek';
 import ZoneDetail from '@/components/maps/zoneDetail';
 import { polygonsByKota, regionByKota, zonaDetailData } from '@/constants/dummyData';
@@ -27,7 +27,7 @@ export default function MapsScreen() {
 
   // States
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterVisible, setFilterVisible] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [filters, setFilters] = useState({
     wilayah: 'Kecamatan',
     kelompok: [] as string[],
@@ -39,10 +39,20 @@ export default function MapsScreen() {
   const polygons = polygonsByKota[currentKota] || [];
   const region = regionByKota[currentKota];
 
+  // Check if filter is active
+  const isFilterActive = filters.kelompok.length > 0 || filters.wilayah !== 'Kecamatan' || searchQuery !== '';
+
   // Handle polygon press
   const handlePolygonPress = useCallback((zoneId: number) => {
     setSelectedZone(zoneId);
     setDetailMode(false);
+  }, []);
+
+  // Clear all filters
+  const handleClearFilter = useCallback(() => {
+    setFilters({ wilayah: 'Kecamatan', kelompok: [] });
+    setSearchQuery('');
+    setFilterOpen(false);
   }, []);
 
   // Handle expand to detail
@@ -64,11 +74,6 @@ export default function MapsScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle="dark-content"
-      />
 
       <View className="flex-1">
         {/* Map */}
@@ -107,12 +112,24 @@ export default function MapsScreen() {
           />
         </MapView>
 
-        {/* Search Bar */}
-        <SearchBar
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          onFilterPress={() => setFilterVisible(true)}
-        />
+        {/* Search + Filter Container */}
+        <View className="absolute top-0 left-0 right-0 z-10">
+          <SearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onFilterPress={() => setFilterOpen(!filterOpen)}
+            isFilterActive={isFilterActive}
+            onClearFilter={handleClearFilter}
+          />
+
+          {/* Filter Panel */}
+          <FilterPanel
+            visible={filterOpen}
+            onClose={() => setFilterOpen(false)}
+            filters={filters}
+            onFilterChange={setFilters}
+          />
+        </View>
 
         {/* Legend */}
         <MapLegend />
@@ -155,14 +172,6 @@ export default function MapsScreen() {
           </View>
         )}
       </View>
-
-      {/* Filter Modal */}
-      <FilterSearch
-        visible={filterVisible}
-        onClose={() => setFilterVisible(false)}
-        filters={filters}
-        onFilterChange={setFilters}
-      />
     </SafeAreaView>
   );
 }

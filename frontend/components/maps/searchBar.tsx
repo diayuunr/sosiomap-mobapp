@@ -1,18 +1,26 @@
 import React from 'react';
 import { View, TextInput, TouchableOpacity } from 'react-native';
-import { SlidersHorizontal } from 'lucide-react-native';
+import { SlidersHorizontal, X } from 'lucide-react-native';
 import { Colors } from '@/constants/colors';
 
 interface SearchBarProps {
   value: string;
   onChangeText: (text: string) => void;
   onFilterPress: () => void;
+  isFilterActive: boolean;
+  onClearFilter: () => void;
 }
 
-export default function SearchBar({ value, onChangeText, onFilterPress }: SearchBarProps) {
+export default function SearchBar({ 
+  value, 
+  onChangeText, 
+  onFilterPress, 
+  isFilterActive,
+  onClearFilter 
+}: SearchBarProps) {
   return (
     <View 
-      className="absolute top-1 left-2 right-2 flex-row items-center mx-4 mt-4 px-4 py-2 rounded-2xl"
+      className="mx-4 mt-14 px-4 py-3 rounded-xl"
       style={{ 
         backgroundColor: Colors.card,
         shadowColor: '#000',
@@ -22,17 +30,35 @@ export default function SearchBar({ value, onChangeText, onFilterPress }: Search
         elevation: 3,
       }}
     >
-      <TextInput
-        className="flex-1 ml-1 text-sm"
-        style={{ color: Colors.textPrimary }}
-        placeholder="Cari Wilayah..."
-        placeholderTextColor={Colors.textMuted}
-        value={value}
-        onChangeText={onChangeText}
-      />
-      <TouchableOpacity onPress={onFilterPress}>
-        <SlidersHorizontal size={20} color={Colors.primary} />
-      </TouchableOpacity>
+      <View className="flex-row items-center">
+        {/* Text Input */}
+        <TextInput
+          className="flex-1 text-sm"
+          style={{ color: Colors.textPrimary }}
+          placeholder="Cari Wilayah..."
+          placeholderTextColor={Colors.textMuted}
+          value={value}
+          onChangeText={onChangeText}
+        />
+
+        {/* X button */}
+        {isFilterActive && (
+          <TouchableOpacity 
+            className="mr-3"
+            onPress={onClearFilter}
+          >
+            <X size={20} color={isFilterActive ? Colors.primary : Colors.textMuted} />
+          </TouchableOpacity>
+        )}
+
+        {/* Filter icon */}
+        <TouchableOpacity onPress={onFilterPress}>
+          <SlidersHorizontal 
+            size={20} 
+            color={isFilterActive ? Colors.primary : Colors.textMuted} 
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

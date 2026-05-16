@@ -5,7 +5,7 @@ import { RiskColors, RiskLabels, Colors } from '@/constants/colors';
 export default function MapLegend() {
   return (
     <View 
-      className="absolute bottom-20 mb-20 left-7 rounded-xl px-5 py-3"
+      className="absolute bottom-20 mb-20 left-6 rounded-xl px-5 py-3"
       style={{ 
         backgroundColor: 'rgba(255,255,255,0.95)',
         shadowColor: '#000',
