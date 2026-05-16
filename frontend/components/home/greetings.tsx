@@ -41,7 +41,7 @@ export default function Greetings() {
           Halo, User123!
         </Text>
 
-        <View className="mt-3 flex-row items-center justify-center rounded-xl border-2 border-accent px-3 py-3">
+        <View className="mt-2 mb-5 w-[50%] flex-row items-center justify-center rounded-xl border-2 border-accent px-3 py-2">
         <Feather name="user" size={18} color="#007BE5" />
 
         <Text className="ml-2 text-sm text-primary">
