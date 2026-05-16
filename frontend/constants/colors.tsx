@@ -45,7 +45,7 @@ export const Colors = {
 
 export const RiskColors = {
   stabil: '#0AA24F',
-  perhatian: '#FDD216',
+  perhatian: '#ecc204',
   risiko: '#C20B0D',
 };
 
@@ -57,7 +57,7 @@ export const RiskLabels = {
 
 export const RiskBgColors = {
   stabil: '#DCFCE7',
-  perhatian: '#FEF9C3',
+  perhatian: '#fffbcc',
   risiko: '#FEE2E2',
 };
 

@@ -35,7 +35,7 @@ export default function MapsScreen() {
   const [selectedZone, setSelectedZone] = useState<number | null>(null);
   const [detailMode, setDetailMode] = useState(false);
 
-  const currentKota = 'Cimahi'; // Default, bisa dari context/props
+  const currentKota = 'Cimahi'; // Default
   const polygons = polygonsByKota[currentKota] || [];
   const region = regionByKota[currentKota];
 
@@ -146,7 +146,7 @@ export default function MapsScreen() {
         {/* Zone Peek (Bottom Sheet) */}
         {selectedZone && selectedZoneData && !detailMode && (
           <View 
-            className="absolute bottom-0 left-0 right-0"
+            className="absolute bottom-12 left-0 right-0 mb-10"
             style={{ height: PEEK_HEIGHT }}
           >
             <ZonePeek 

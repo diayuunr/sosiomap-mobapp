@@ -18,27 +18,27 @@ interface ZonePeekProps {
 export default function ZonePeek({ data, onExpand }: ZonePeekProps) {
   return (
     <TouchableOpacity
-      className="mx-4 mb-4 rounded-2xl overflow-hidden"
+      className="mb-4 rounded-t-2xl overflow-hidden"
       style={{ backgroundColor: Colors.card }}
       onPress={onExpand}
       activeOpacity={0.9}
     >
       {/* Drag Handle */}
-      <View className="items-center py-2">
+      <View className="items-center py-4">
         <View 
-          className="w-10 h-1 rounded-full"
+          className="w-20 h-1.5 rounded-full"
           style={{ backgroundColor: Colors.peekBar }}
         />
       </View>
 
       {/* Kelompok Badge */}
-      <View className="px-4 pb-3">
+      <View className="px-6 pb-3">
         <View 
           className="self-start px-3 py-1 rounded-lg mb-2"
           style={{ backgroundColor: RiskBgColors[data.riskLevel as keyof typeof RiskBgColors] }}
         >
           <Text 
-            className="text-xs font-medium"
+            className="text-sm font-medium"
             style={{ color: RiskColors[data.riskLevel as keyof typeof RiskColors] }}
           >
             {data.kelompok}
@@ -57,17 +57,16 @@ export default function ZonePeek({ data, onExpand }: ZonePeekProps) {
         <View className="flex-row">
           {/* Wajib Pajak */}
           <View 
-            className="flex-1 mr-2 p-3 rounded-xl border"
+            className="flex-1 mr-2 p-3 rounded-xl border items-center justify-center"
             style={{ 
               backgroundColor: Colors.yellowLight,
               borderColor: Colors.accent,
             }}
           >
             <View className="flex-row items-center mb-1">
-              <Users size={16} color={Colors.textMuted} />
+              <Users size={16} />
               <Text 
-                className="text-xs ml-1.5"
-                style={{ color: Colors.textMuted }}
+                className="text-sm ml-2"
               >
                 Wajib Pajak
               </Text>
@@ -82,17 +81,16 @@ export default function ZonePeek({ data, onExpand }: ZonePeekProps) {
 
           {/* Pendapatan */}
           <View 
-            className="flex-1 ml-2 p-3 rounded-xl border"
+            className="flex-1 ml-2 p-3 rounded-xl border items-center justify-center"
             style={{ 
               backgroundColor: Colors.yellowLight,
               borderColor: Colors.accent,
             }}
           >
             <View className="flex-row items-center mb-1">
-              <Wallet size={16} color={Colors.textMuted} />
+              <Wallet size={16} />
               <Text 
-                className="text-xs ml-1.5"
-                style={{ color: Colors.textMuted }}
+                className="text-sm ml-2"
               >
                 Pendapatan
               </Text>

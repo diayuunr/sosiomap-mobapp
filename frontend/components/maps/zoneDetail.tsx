@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { Users, Wallet, Shield, TriangleAlert } from 'lucide-react-native';
+import { Users, Wallet, Shield, TriangleAlert, Briefcase, UserCheck, TrendingUp, Lightbulb } from 'lucide-react-native';
 import { LineChart } from 'react-native-gifted-charts';
 import { Colors, RiskBgColors, RiskColors } from '@/constants/colors';
 
@@ -18,16 +18,16 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
 
   return (
     <View 
-      className="flex-1 rounded-t-3xl overflow-hidden"
+      className="flex-1 rounded-t-3xl overflow-hidden pb-20"
       style={{ backgroundColor: Colors.card }}
     >
       {/* Drag Handle */}
       <TouchableOpacity 
-        className="items-center py-3"
+        className="items-center py-4"
         onPress={onClose}
       >
         <View 
-          className="w-10 h-1 rounded-full"
+          className="w-20 h-1.5 rounded-full"
           style={{ backgroundColor: Colors.peekBar }}
         />
       </TouchableOpacity>
@@ -36,14 +36,14 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 30 }}
       >
-        <View className="px-5">
+        <View className="px-6 pb-3">
           {/* Kelompok Badge */}
           <View 
-            className="self-start px-3 py-1.5 rounded-lg mb-2"
+            className="self-start px-3 py-1 rounded-lg mb-2"
             style={{ backgroundColor: RiskBgColors[riskLevel] }}
           >
             <Text 
-              className="text-xs font-medium"
+              className="text-sm font-medium"
               style={{ color: RiskColors[riskLevel] }}
             >
               {data.kelompok}
@@ -59,18 +59,18 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
           </Text>
 
           {/* Stats Grid */}
-          <View className="flex-row flex-wrap mb-4">
+          <View className="flex-row flex-wrap mb-2">
             {/* Wajib Pajak */}
             <View 
-              className="w-[48%] mr-[4%] mb-3 p-3 rounded-xl border"
+              className="w-[48%] mr-[4%] mb-3 p-3 rounded-xl border items-center justify-center"
               style={{ 
                 backgroundColor: Colors.yellowLight,
                 borderColor: Colors.accent,
               }}
             >
               <View className="flex-row items-center mb-1">
-                <Users size={16} color={Colors.textMuted} />
-                <Text className="text-xs ml-1.5" style={{ color: Colors.textMuted }}>
+                <Users size={16}/>
+                <Text className="text-sm ml-1.5">
                   Wajib Pajak
                 </Text>
               </View>
@@ -81,15 +81,15 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
 
             {/* Pendapatan */}
             <View 
-              className="w-[48%] mb-3 p-3 rounded-xl border"
+              className="w-[48%] mb-3 p-3 rounded-xl border items-center justify-center"
               style={{ 
                 backgroundColor: Colors.yellowLight,
                 borderColor: Colors.accent,
               }}
             >
               <View className="flex-row items-center mb-1">
-                <Wallet size={16} color={Colors.textMuted} />
-                <Text className="text-xs ml-1.5" style={{ color: Colors.textMuted }}>
+                <Wallet size={16} />
+                <Text className="text-sm ml-2">
                   Pendapatan
                 </Text>
               </View>
@@ -100,15 +100,15 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
 
             {/* Kepatuhan */}
             <View 
-              className="w-[48%] mr-[4%] mb-3 p-3 rounded-xl border"
+              className="w-[48%] mr-[4%] mb-3 p-3 rounded-xl border items-center justify-center"
               style={{ 
                 backgroundColor: Colors.yellowLight,
                 borderColor: Colors.accent,
               }}
             >
               <View className="flex-row items-center mb-1">
-                <Shield size={16} color={Colors.textMuted} />
-                <Text className="text-xs ml-1.5" style={{ color: Colors.textMuted }}>
+                <Shield size={16} />
+                <Text className="text-sm ml-2">
                   Kepatuhan
                 </Text>
               </View>
@@ -119,15 +119,15 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
 
             {/* Tunggakan */}
             <View 
-              className="w-[48%] mb-3 p-3 rounded-xl border"
+              className="w-[48%] mb-3 p-3 rounded-xl border items-center justify-center"
               style={{ 
                 backgroundColor: Colors.yellowLight,
                 borderColor: Colors.accent,
               }}
             >
               <View className="flex-row items-center mb-1">
-                <TriangleAlert size={16} color={Colors.textMuted} />
-                <Text className="text-xs ml-1.5" style={{ color: Colors.textMuted }}>
+                <TriangleAlert size={16} />
+                <Text className="text-sm ml-2">
                   Tunggakan
                 </Text>
               </View>
@@ -139,7 +139,7 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
 
           {/* Risk Badge */}
           <View 
-            className="flex-row items-center self-start px-3 py-2 rounded-full border mb-5"
+            className="flex-row items-center self-start px-3 py-2 rounded-xl border mb-5"
             style={{ 
               backgroundColor: RiskBgColors[riskLevel],
               borderColor: RiskColors[riskLevel],
@@ -165,12 +165,11 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
             <View className="flex-row items-center mb-3">
               <View 
                 className="w-8 h-8 rounded-full items-center justify-center mr-2"
-                style={{ backgroundColor: Colors.yellowLight }}
               >
-                <Text className="text-xs">💼</Text>
+                <Briefcase size={20}/>
               </View>
               <Text 
-                className="text-sm font-semibold"
+                className="text-md font-semibold"
                 style={{ color: Colors.textPrimary }}
               >
                 PROFIL PEKERJAAN
@@ -221,12 +220,11 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
             <View className="flex-row items-center mb-3">
               <View 
                 className="w-8 h-8 rounded-full items-center justify-center mr-2"
-                style={{ backgroundColor: Colors.yellowLight }}
               >
-                <Text className="text-xs">👥</Text>
+                <UserCheck size={20} />
               </View>
               <Text 
-                className="text-sm font-semibold"
+                className="text-md font-semibold"
                 style={{ color: Colors.textPrimary }}
               >
                 DEMOGRAFI USIA
@@ -237,7 +235,7 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
               {data.demografiUsia.map((item: any, index: number) => (
                 <View 
                   key={index}
-                  className="items-center p-3 rounded-xl border"
+                  className="items-center p-3 px-7 rounded-xl border"
                   style={{ 
                     borderColor: item.color,
                     backgroundColor: `${item.color}10`,
@@ -268,12 +266,11 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
             <View className="flex-row items-center mb-3">
               <View 
                 className="w-8 h-8 rounded-full items-center justify-center mr-2"
-                style={{ backgroundColor: Colors.yellowLight }}
               >
-                <Text className="text-xs">📈</Text>
+               <TrendingUp size={20}/>
               </View>
               <Text 
-                className="text-sm font-semibold"
+                className="text-md font-semibold"
                 style={{ color: Colors.textPrimary }}
               >
                 TREN KEPATUHAN 5 TAHUN
@@ -309,12 +306,19 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
 
           {/* Rekomendasi Kebijakan */}
           <View className="mb-5">
-            <Text 
-              className="text-sm font-semibold mb-3"
-              style={{ color: Colors.textPrimary }}
-            >
-              REKOMENDASI KEBIJAKAN
-            </Text>
+            <View className="flex-row items-center mb-3">
+              <View 
+                className="w-8 h-8 rounded-full items-center justify-center mr-2"
+              >
+               <Lightbulb size={20}/>
+              </View>
+              <Text 
+                className="text-md font-semibold"
+                style={{ color: Colors.textPrimary }}
+              >
+                REKOMENDASI KEBIJAKAN
+              </Text>
+            </View>
 
             {data.rekomendasi.map((item: any, index: number) => (
               <View 
@@ -329,7 +333,7 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
                   className="w-8 h-8 rounded-lg items-center justify-center mr-3"
                   style={{ backgroundColor: Colors.accent }}
                 >
-                  <Text className="text-xs font-bold" style={{ color: Colors.primaryDark }}>
+                  <Text className="text-md font-bold" style={{ color: Colors.primaryDark }}>
                     {item.no}
                   </Text>
                 </View>
