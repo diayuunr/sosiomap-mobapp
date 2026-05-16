@@ -17,6 +17,7 @@ module.exports = {
 
         // Accent
         accent: "#FDD216",
+        "accent-dark": "#ecc204",
         "accent-light": "#EACE2A",
 
         // Backgrounds

@@ -7,6 +7,7 @@ export const Colors = {
   // Accent
   accent: '#FDD216',
   accentLight: '#EACE2A',
+  accentDark: "#ecc204",
 
   // Backgrounds
   background: '#F1F5F9',

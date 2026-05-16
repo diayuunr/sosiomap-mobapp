@@ -233,3 +233,29 @@ export const zonaDetailData: Record<number, any> = {
     ],
   },
 };
+
+export const periodeOptions = [
+  { id: 1, label: 'OKT - DES 2025', subtitle: 'Triwulan IV 2025' },
+  { id: 2, label: 'JAN - MAR 2026', subtitle: 'Triwulan I 2026' },
+  { id: 3, label: 'APR - JUN 2026', subtitle: 'Triwulan II 2026' },
+  { id: 4, label: 'JUL - SEP 2026', subtitle: 'Triwulan III 2026' },
+];
+
+export const klasterOptions = [
+  'Semua',
+  'Pensiunan',
+  'Pegawai Negeri',
+  'UMKM',
+  'Wirausaha',
+];
+
+export const laporanContent = {
+  title: 'Laporan Triwulan I 2026',
+  subtitle: '12 Kecamatan - Semua Klaster',
+  items: [
+    'Distribusi Klaster Ekonomi & Populasi Wajib Pajak',
+    'Tingkat Kepatuhan & Tren Historis',
+    'Ringkasan Tunggakan per Zona',
+    'Rekomendasi Kebijakan per Kelompok',
+  ],
+};
