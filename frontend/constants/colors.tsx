@@ -36,6 +36,10 @@ export const Colors = {
   blueSky: '#4FB8F8',
   navy: '#050F32',
   gray: '#898989',
+
+  // Map specific
+  mapOverlay: 'rgba(0, 0, 0, 0.4)',
+  peekBar: '#D9D9D9',
 };
 
 export const RiskColors = {
@@ -54,4 +58,18 @@ export const RiskBgColors = {
   stabil: '#DCFCE7',
   perhatian: '#FEF9C3',
   risiko: '#FEE2E2',
+};
+
+export const EkonomiColors = {
+  pensiunan: '#EACE2A',
+  pegawai: '#007BE5',
+  umkm: '#4FB8F8',
+  wirausaha: '#0AA34F',
+};
+
+export const UsiaColors = {
+  '20-30': '#007BE5',
+  '31-45': '#EACE2A',
+  '46-60': '#050F32',
+  '60+': '#C20B0D',
 };

@@ -33,7 +33,7 @@ export default function TabLayout() {
         tabBarStyle: {
           position: "absolute",
 
-          bottom: 25,
+          bottom: 40,
           marginHorizontal: 20,
 
           paddingTop: 7,

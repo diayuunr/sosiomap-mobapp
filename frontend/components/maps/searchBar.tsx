@@ -1,29 +1,38 @@
 import React from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity } from 'react-native';
+import { SlidersHorizontal } from 'lucide-react-native';
+import { Colors } from '@/constants/colors';
 
-export default function SearchBar() {
+interface SearchBarProps {
+  value: string;
+  onChangeText: (text: string) => void;
+  onFilterPress: () => void;
+}
+
+export default function SearchBar({ value, onChangeText, onFilterPress }: SearchBarProps) {
   return (
-    <View style={styles.container}>
+    <View 
+      className="absolute top-1 left-2 right-2 flex-row items-center mx-4 mt-4 px-4 py-2 rounded-2xl"
+      style={{ 
+        backgroundColor: Colors.card,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+      }}
+    >
       <TextInput
-        placeholder="Cari wilayah..."
-        style={styles.input}
+        className="flex-1 ml-1 text-sm"
+        style={{ color: Colors.textPrimary }}
+        placeholder="Cari Wilayah..."
+        placeholderTextColor={Colors.textMuted}
+        value={value}
+        onChangeText={onChangeText}
       />
+      <TouchableOpacity onPress={onFilterPress}>
+        <SlidersHorizontal size={20} color={Colors.primary} />
+      </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 50,
-    left: 20,
-    right: 20,
-  },
-  input: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    paddingHorizontal: 20,
-    height: 50,
-    elevation: 5,
-  },
-});
