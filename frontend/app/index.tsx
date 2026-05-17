@@ -1,15 +1,9 @@
-import { Text, View } from "react-native";
+// app/index.tsx
+import { Redirect } from 'expo-router';
 
 export default function Index() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
-  );
+  // Root layout akan handle redirect berdasarkan auth state
+  // Ini fallback aja
+  // Cast to any to satisfy union type from expo-router for dynamic routes
+  return <Redirect href={'/login' as any} />;
 }

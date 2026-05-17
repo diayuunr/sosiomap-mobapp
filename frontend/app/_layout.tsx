@@ -1,105 +1,55 @@
-import { Tabs } from "expo-router";
-import Feather from "@expo/vector-icons/Feather";
-import { useFonts } from "expo-font";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+// app/_layout.tsx
+import React, { useEffect, useState } from 'react';
+import { Slot, useRouter, useSegments } from 'expo-router';
+import { View, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Colors } from '@/constants/colors';
 import "../global.css";
 
-export default function TabLayout() {
-  const insets = useSafeAreaInsets();
+export default function RootLayout() {
+  const [isReady, setIsReady] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+  const segments = useSegments();
 
-  const [fontsLoaded] = useFonts({
-    MplusBlack: require("../assets/font/MPLUSRounded1c-Black.ttf"),
-    MplusExtraBold: require("../assets/font/MPLUSRounded1c-ExtraBold.ttf"),
-    MplusBold: require("../assets/font/MPLUSRounded1c-Bold.ttf"),
-    MplusMedium: require("../assets/font/MPLUSRounded1c-Medium.ttf"),
-    MplusRegular: require("../assets/font/MPLUSRounded1c-Regular.ttf"),
-    MplusLight: require("../assets/font/MPLUSRounded1c-Light.ttf"),
-    MplusThin: require("../assets/font/MPLUSRounded1c-Thin.ttf"),
-  });
+  useEffect(() => {
+    checkAuth();
+  }, []);
 
-  if (!fontsLoaded) return null;
+  useEffect(() => {
+    if (!isReady) return;
 
-  return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
+    // Cek apakah di tab group (protected route)
+    const inTabsGroup = ['home', 'maps'].includes(segments[0] ?? '');
+   // const inLoginScreen = String(segments[0]) === 'login';
+    
+    if (!isLoggedIn && inTabsGroup) {
+      // Belum login & di tab group → redirect ke login
+      router.replace('/login' as any);
+   // } else if (isLoggedIn && inLoginScreen) {
+      // Sudah login tapi di login screen → redirect ke home
+   //   router.replace('/(tabs)/home' as any);
+    }
+  }, [isReady, isLoggedIn, segments, router]);
 
-        tabBarActiveTintColor: "#2563eb",
-        tabBarInactiveTintColor: "#9ca3af",
+  const checkAuth = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      setIsLoggedIn(!!token);
+    } catch (error) {
+      console.log('Auth check error:', error);
+    } finally {
+      setIsReady(true);
+    }
+  };
 
-        tabBarLabelStyle: {
-          fontFamily: "MplusBold",
-          fontSize: 12,
-          marginTop: 2,
-        },
+  if (!isReady) {
+    return (
+      <View className="flex-1 items-center justify-center" style={{ backgroundColor: Colors.background }}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
 
-        tabBarStyle: {
-          position: "absolute",
-
-          left: 0,
-          right: 0,
-          bottom: 0,
-
-          backgroundColor: "white",
-
-          borderTopWidth: 1,
-          borderTopColor: "#f1f5f9",
-
-          elevation: 8,
-
-          shadowColor: "#000",
-          shadowOpacity: 0.05,
-          shadowRadius: 8,
-
-          paddingTop: 6,
-
-          // IMPORTANT
-          paddingBottom: insets.bottom > 0 ? insets.bottom : 10,
-
-          height: 60 + (insets.bottom > 0 ? insets.bottom : 10),
-        },
-
-        tabBarItemStyle: {
-          paddingVertical: 4,
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="home"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => (
-            <Feather name="home" size={22} color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="maps"
-        options={{
-          title: "Maps",
-          tabBarIcon: ({ color }) => (
-            <Feather name="map" size={22} color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="export"
-        options={{
-          title: "Export",
-          tabBarIcon: ({ color }) => (
-            <Feather name="file" size={22} color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="index"
-        options={{
-          href: null,
-        }}
-      />
-    </Tabs>
-  );
+  return <Slot />;
 }

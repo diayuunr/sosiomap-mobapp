@@ -4,7 +4,7 @@
     "slug": "sosiomap",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/sosiomap-splash.png",
     "scheme": "sosiomap",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,

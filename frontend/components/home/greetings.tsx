@@ -6,10 +6,17 @@ import {
   SafeAreaView,
 } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
+import { useRouter } from 'expo-router';
 
 export default function Greetings() {
+  const router = useRouter();
+
+  const handleUser = async () => {
+    // Redirect ke home
+    router.replace('/user');
+  };
   return (
-    <SafeAreaView className="flex-1 bg-white px-6">
+    <SafeAreaView className="flex-1 bg-white px-6 mt-5">
       <StatusBar barStyle="dark-content" />
 
       {/* Header */}
@@ -19,7 +26,7 @@ export default function Greetings() {
             SosioMap
           </Text>
 
-          <Text className="text-sm text-gray-500">
+          <Text className="text-sm text-gray-500 mt-1">
             Pemetaan Profil Ekonomi Wajib Pajak
           </Text>
         </View>
@@ -28,10 +35,14 @@ export default function Greetings() {
           <TouchableOpacity className="h-9 w-9 items-center justify-center rounded-full">
             <Text className="text-xl"><Feather name="bell" size={24} /></Text>
           </TouchableOpacity>
-
+        <TouchableOpacity
+          onPress={handleUser}
+          activeOpacity={0.8}
+        >
           <View className="h-9 w-9 items-center justify-center rounded-full bg-blue-500">
             <Text className="text-[15px] font-bold text-white">U</Text>
           </View>
+          </TouchableOpacity>
         </View>
       </View>
 
