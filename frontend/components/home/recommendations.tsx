@@ -1,12 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { MapPin, ChevronRight } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
-import { wilayahPrioritas } from '@/constants/dummyData';
+import { getRekomendasi } from '@/src/services/rekomendasi.service';
 import { RiskColors, RiskBgColors, Colors } from '@/constants/colors';
 
 export default function RecommendationSection() {
   const router = useRouter();
+  const [rekomendasi, setRekomendasi] =
+  useState<any[]>([]);
+
+  useEffect(() => {
+  loadRekomendasi();
+}, []);
+
+const loadRekomendasi =
+  async () => {
+
+  try {
+
+    const data =
+      await getRekomendasi();
+
+    console.log(
+      'REKOMENDASI:',
+      data
+    );
+
+    setRekomendasi(data || []);
+
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   return (
     <View className="px-5 py-3 bg-white rounded-2xl mx-7 mt-1"
@@ -29,14 +55,14 @@ export default function RecommendationSection() {
         className="rounded-2xl overflow-hidden"
         style={{ backgroundColor: Colors.card }}
       >
-        {wilayahPrioritas.map((wilayah, index) => {
+        {rekomendasi.map((wilayah, index) => {
           const riskKey = wilayah.risk as keyof typeof RiskColors;
           return (
             <TouchableOpacity
               key={wilayah.id}
               className="flex-row items-center px-4 py-4"
               style={{
-                borderBottomWidth: index < wilayahPrioritas.length - 1 ? 1 : 0,
+                borderBottomWidth: index < rekomendasi.length - 1 ? 1 : 0,
                 borderBottomColor: Colors.background,
               }}
               onPress={() => router.push(`/maps?zone=${wilayah.id}`)}
@@ -58,7 +84,7 @@ export default function RecommendationSection() {
                 className="flex-1 text-sm font-medium"
                 style={{ color: Colors.primary }}
               >
-                {wilayah.name}
+                {wilayah.wilayah?.nama}
               </Text>
 
               {/* Arrow */}
