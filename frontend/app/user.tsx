@@ -1,5 +1,5 @@
 // app/user.tsx
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -8,19 +8,79 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function UserScreen() {
   const router = useRouter();
+  const [username, setUsername] = useState('');
+  const [role, setRole] = useState('');
+  const [loading, setLoading] = useState(true);
 
-const handleLogout = async () => {
-  // Hapus semua session data
-  await AsyncStorage.multiRemove(['userToken', 'userRole', 'username']);
-  
-  // Redirect ke login
-  // cast to any to satisfy expo-router's strict route type definitions
-  router.replace('/login' as any);
-};
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const storedUsername =
+          await AsyncStorage.getItem('username');
 
-const handleLogin = async () => {
-  router.replace('/home' as any);
-};
+        const storedRole =
+          await AsyncStorage.getItem('userRole');
+
+        /**
+         * kalau belum login
+         */
+
+        if (!storedUsername) {
+          router.replace('/login' as any);
+          return;
+        }
+
+        setUsername(storedUsername);
+        setRole(storedRole || '');
+
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserData();
+  }, [router]);
+
+  const handleLogin = async () => {
+    router.replace('/home' as any);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.multiRemove([
+        'userToken',
+        'userRole',
+        'username',
+        'userData',
+      ]);
+
+      router.replace('/login' as any);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <SafeAreaView
+        className="flex-1 items-center justify-center"
+        style={{
+          backgroundColor: Colors.background,
+        }}
+      >
+        <Text
+          style={{
+            color: Colors.primary,
+          }}
+        >
+          Loading...
+        </Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView 
@@ -71,7 +131,7 @@ const handleLogin = async () => {
               className="text-xl font-bold"
               style={{ color: Colors.primaryDark }}
             >
-              U
+              {username.charAt(0).toUpperCase()}
             </Text>
           </View>
 
@@ -81,13 +141,13 @@ const handleLogin = async () => {
               className="text-lg font-bold"
               style={{ color: Colors.primaryDark }}
             >
-              User123
+              {username}
             </Text>
             <Text 
               className="text-sm mt-0.5"
               style={{ color: Colors.textMuted }}
             >
-              Analis
+              {role}
             </Text>
           </View>
         </View>

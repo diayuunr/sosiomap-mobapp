@@ -1,11 +1,11 @@
-// app/login.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StatusBar, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StatusBar, KeyboardAvoidingView, Platform, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { User, Lock, Eye, EyeOff, BarChart3, Building2, ShieldCheck } from 'lucide-react-native';
 import { Colors } from '@/constants/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { supabase } from '@/src/lib/supabase';
 
 type Role = 'Analis' | 'Bapenda' | 'Admin';
 
@@ -15,6 +15,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role>('Analis');
+  const [loading, setLoading] = useState(false);
 
   const roles: { id: Role; icon: React.ReactNode; label: string }[] = [
     { 
@@ -23,7 +24,7 @@ export default function LoginScreen() {
       label: 'Analis' 
     },
     { 
-      id: 'Bapenda', 
+      id: 'Bapenda',
       icon: <Building2 size={24} color={selectedRole === 'Bapenda' ? Colors.primary : Colors.textMuted} />, 
       label: 'Bapenda' 
     },
@@ -35,22 +36,83 @@ export default function LoginScreen() {
   ];
 
 const handleLogin = async () => {
-  // TODO: Validasi input
-  if (!username || !password) {
-    // Alert error
-    return;
+  try {
+    if (!username || !password) {
+      Alert.alert(
+        'Login gagal',
+        'Username dan password wajib diisi'
+      );
+      return;
+    }
+
+    setLoading(true);
+
+    /**
+     * LOGIN CUSTOM TABLE
+     * ==================================
+     * Ganti "users" sesuai nama tabel asli
+     */
+
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('username', username)
+      .eq('password', password)
+      .single();
+
+    if (error || !data) {
+      Alert.alert(
+        'Login gagal',
+        'Username atau password salah'
+      );
+      return;
+    }
+
+    /**
+     * OPTIONAL VALIDASI ROLE
+     * kalau ada field role di DB
+     */
+
+    if (
+      data.role &&
+      data.role.toLowerCase() !==
+        selectedRole.toLowerCase()
+    ) {
+      Alert.alert(
+        'Role tidak sesuai',
+        'Silakan pilih role yang benar'
+      );
+      return;
+    }
+
+    /**s
+     * SIMPAN SESSION
+     */
+
+    await AsyncStorage.multiSet([
+      ['userToken', 'logged-in'],
+      ['userRole', selectedRole],
+      ['username', data.username],
+      ['userData', JSON.stringify(data)],
+    ]);
+
+    /**
+     * REDIRECT
+     */
+
+    router.replace('/user');
+
+  } catch (err) {
+    console.log(err);
+
+    Alert.alert(
+      'Error',
+      'Terjadi kesalahan saat login'
+    );
+
+  } finally {
+    setLoading(false);
   }
-
-  // TODO: Integrasi Supabase Auth
-  // const { data, error } = await supabase.auth.signInWithPassword({...})
-
-  // Simpan token (sementara dummy token)
-  await AsyncStorage.setItem('userToken', 'dummy-token-123');
-  await AsyncStorage.setItem('userRole', selectedRole);
-  await AsyncStorage.setItem('username', username);
-
-  // Redirect ke home
-  router.replace('/user');
 };
 
   return (
@@ -186,13 +248,22 @@ const handleLogin = async () => {
             {/* Login Button */}
             <TouchableOpacity
               className="py-3 rounded-xl items-center"
-              style={{ backgroundColor: Colors.primary }}
+              style={{
+                backgroundColor: loading
+                  ? Colors.textMuted
+                  : Colors.primary,
+              }}
               onPress={handleLogin}
               activeOpacity={0.8}
+              disabled={loading}
             >
-              <Text className="text-white font-bold text-base">
-                Masuk
-              </Text>
+              {loading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text className="text-white font-bold text-base">
+                  Masuk
+                </Text>
+              )}
             </TouchableOpacity>
 
             {/* Lupa Password */}
