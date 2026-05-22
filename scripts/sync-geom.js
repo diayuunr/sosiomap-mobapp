@@ -8,6 +8,12 @@ const WILAYAH_QUERY = [
   { nama: 'KOTA DENPASAR', query: 'Denpasar, Bali' },
   { nama: 'KABUPATEN BADUNG', query: 'Badung, Bali' },
   { nama: 'BALI', query: 'Bali, Indonesia' },
+  { nama: 'SIDAKARYA', query: 'Sidakarya, Denpasar Selatan, Bali' },
+  { nama: 'SESETAN', query: 'Sesetan, Denpasar Selatan, Bali' },
+  { nama: 'DANGIN PURI', query: 'Dangin Puri, Denpasar Timur, Bali' },
+  { nama: 'SUMERTA', query: 'Sumerta, Denpasar Timur, Bali' },
+  { nama: 'TUBAN', query: 'Tuban, Kuta, Badung, Bali' },
+  { nama: 'LEGIAN', query: 'Legian, Kuta, Badung, Bali' },
 ]
 
 async function getGeoJSON(query) {
