@@ -23,13 +23,15 @@ import {
   Colors,
 } from '@/constants/colors';
 
-import { getMapGeometry } from '@/src/services/maps.service';
+import {
+  getMapGeometry,
+} from '@/src/services/maps.service';
 
-// Helper
 function hexToRgba(
   hex: string,
   alpha: number
 ): string {
+
   const r = parseInt(
     hex.slice(1, 3),
     16
@@ -50,11 +52,20 @@ function hexToRgba(
 
 interface MapPreviewProps {
   selectedKota: string;
+
+  filters: {
+    kota: string;
+    kecamatan: string;
+    kelurahan: string;
+    provinsi: string;
+  };
 }
 
 export default function MapPreview({
   selectedKota,
+  filters,
 }: MapPreviewProps) {
+
   const router = useRouter();
 
   const mapRef =
@@ -71,25 +82,46 @@ export default function MapPreview({
   }, []);
 
   const loadMap = async () => {
+
     try {
+
       const data =
         await getMapGeometry();
 
-      console.log(
-        'MAP DATA:',
-        JSON.stringify(data, null, 2)
-      );
-
       setPolygons(data || []);
+
     } catch (error) {
+
       console.log(
         'MAP ERROR:',
         error
       );
+
     } finally {
+
       setLoading(false);
+
     }
   };
+
+  /**
+   * FILTER
+   */
+
+  const activeFilter =
+    filters.kelurahan ||
+    filters.kecamatan ||
+    filters.kota ||
+    filters.provinsi;
+
+  const filteredPolygons =
+    activeFilter
+      ? polygons.filter(
+          (item) =>
+            item.nama ===
+            activeFilter
+        )
+      : polygons;
 
   if (loading) {
     return (
@@ -122,8 +154,8 @@ export default function MapPreview({
         elevation: 3,
       }}
     >
-      {/* MAP */}
       <View className="h-64 w-full">
+
         <MapView
           ref={mapRef}
           style={{
@@ -137,112 +169,55 @@ export default function MapPreview({
             longitudeDelta: 0.4,
           }}
         >
-          {polygons.map(
+
+          {filteredPolygons.map(
             (item, index) => {
+
               if (!item.geom)
                 return null;
 
-              const geometry =
-                typeof item.geom ===
-                'string'
-                  ? JSON.parse(
-                      item.geom
-                    )
-                  : item.geom;
+              try {
 
-              /**
-               * AMBIL KLASTER
-               */
-
-              const klaster =
-                item
-                  .klaster_wilayah?.[0]
-                  ?.klaster_label ||
-                'Hijau';
-
-              /**
-               * MAPPING WARNA
-               */
-
-              let riskColor =
-                RiskColors.stabil;
-
-              if (
-                klaster ===
-                'Merah'
-              ) {
-                riskColor =
-                  RiskColors.risiko;
-              } else if (
-                klaster ===
-                'Kuning'
-              ) {
-                riskColor =
-                  RiskColors.perhatian;
-              }
-
-              /**
-               * POLYGON
-               */
-
-              if (
-                geometry.type ===
-                'Polygon'
-              ) {
-                const coordinates =
-                  geometry.coordinates[0].map(
-                    (
-                      coord: number[]
-                    ) => ({
-                      latitude:
-                        coord[1],
-                      longitude:
-                        coord[0],
-                    })
-                  );
-
-                return (
-                  <Polygon
-                    key={`polygon-${index}`}
-                    coordinates={
-                      coordinates
-                    }
-                    fillColor={hexToRgba(
-                      riskColor,
-                      0.25
-                    )}
-                    strokeColor={
-                      riskColor
-                    }
-                    strokeWidth={2.5}
-                    tappable
-                    onPress={() =>
-                      router.push(
-                        `/maps?zone=${item.id}`
+                const geometry =
+                  typeof item.geom ===
+                  'string'
+                    ? JSON.parse(
+                        item.geom
                       )
-                    }
-                  />
-                );
-              }
+                    : item.geom;
 
-              /**
-               * MULTIPOLYGON
-               */
+                const klaster =
+                  item
+                    .klaster_wilayah?.[0]
+                    ?.klaster_label ||
+                  'Hijau';
 
-              if (
-                geometry.type ===
-                'MultiPolygon'
-              ) {
-                return geometry.coordinates.map(
-                  (
-                    polygonCoords: any,
-                    polyIndex: number
-                  ) => {
-                    const ring =
-                      polygonCoords[0];
+                let riskColor =
+                  RiskColors.stabil;
 
-                    const coordinates =
-                      ring.map(
+                if (
+                  klaster ===
+                  'Merah'
+                ) {
+                  riskColor =
+                    RiskColors.risiko;
+
+                } else if (
+                  klaster ===
+                  'Kuning'
+                ) {
+                  riskColor =
+                    RiskColors.perhatian;
+                }
+
+                if (
+                  geometry.type ===
+                  'Polygon'
+                ) {
+
+                  const coordinates =
+                    geometry.coordinates[0]
+                      .map(
                         (
                           coord: number[]
                         ) => ({
@@ -254,39 +229,99 @@ export default function MapPreview({
                         })
                       );
 
-                    return (
-                      <Polygon
-                        key={`multi-${index}-${polyIndex}`}
-                        coordinates={
-                          coordinates
-                        }
-                        fillColor={hexToRgba(
-                          riskColor,
-                          0.25
-                        )}
-                        strokeColor={
-                          riskColor
-                        }
-                        strokeWidth={
-                          2.5
-                        }
-                        tappable
-                        onPress={() =>
-                          router.push(
-                            `/maps?zone=${item.id}`
-                          )
-                        }
-                      />
-                    );
-                  }
-                );
-              }
+                  return (
+                    <Polygon
+                      key={`polygon-${index}`}
+                      coordinates={
+                        coordinates
+                      }
+                      fillColor={hexToRgba(
+                        riskColor,
+                        0.25
+                      )}
+                      strokeColor={
+                        riskColor
+                      }
+                      strokeWidth={2.5}
+                      tappable
+                      onPress={() =>
+                        router.push(
+                          `/maps?zone=${item.id}`
+                        )
+                      }
+                    />
+                  );
+                }
 
-              return null;
+                if (
+                  geometry.type ===
+                  'MultiPolygon'
+                ) {
+
+                  return geometry.coordinates.map(
+                    (
+                      polygonCoords: any,
+                      polyIndex: number
+                    ) => {
+
+                      const ring =
+                        polygonCoords[0];
+
+                      const coordinates =
+                        ring.map(
+                          (
+                            coord: number[]
+                          ) => ({
+                            latitude:
+                              coord[1],
+
+                            longitude:
+                              coord[0],
+                          })
+                        );
+
+                      return (
+                        <Polygon
+                          key={`multi-${index}-${polyIndex}`}
+                          coordinates={
+                            coordinates
+                          }
+                          fillColor={hexToRgba(
+                            riskColor,
+                            0.25
+                          )}
+                          strokeColor={
+                            riskColor
+                          }
+                          strokeWidth={
+                            2.5
+                          }
+                          tappable
+                          onPress={() =>
+                            router.push(
+                              `/maps?zone=${item.id}`
+                            )
+                          }
+                        />
+                      );
+                    }
+                  );
+                }
+
+                return null;
+
+              } catch (error) {
+
+                console.log(
+                  'POLYGON ERROR:',
+                  error
+                );
+
+                return null;
+              }
             }
           )}
 
-          {/* CENTER MARKER */}
           <Marker
             coordinate={{
               latitude: -8.65,
@@ -299,7 +334,6 @@ export default function MapPreview({
           />
         </MapView>
 
-        {/* LEGEND */}
         <View
           className="absolute bottom-3 right-3 rounded-xl p-3"
           style={{

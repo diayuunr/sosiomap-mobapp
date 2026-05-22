@@ -8,34 +8,73 @@ import StatsSection from '@/components/home/stats';
 import TrendChart from '@/components/home/trend';
 
 export default function HomePage() {
-  const [filters, setFilters] = useState({
-    kota: 'Cimahi',
-    kecamatan: 'Cimahi Tengah',
-    kelurahan: '---',
-    provinsi: 'Jawa Barat',
-  });
 
-  const [appliedKota, setAppliedKota] = useState('Cimahi');
+  /**
+   * FILTER STATE
+   */
 
-  const handleApplyFilter = () => {
-    setAppliedKota(filters.kota);
-  };
+  const [filters, setFilters] =
+    useState({
+      kota: '',
+      kecamatan: '',
+      kelurahan: '',
+      provinsi: '',
+    });
+
+  /**
+   * APPLIED FILTER
+   */
+
+  const [appliedFilters,
+    setAppliedFilters] =
+    useState(filters);
+
+  /**
+   * APPLY FILTER
+   */
+
+  const handleApplyFilter =
+    () => {
+      setAppliedFilters(filters);
+    };
 
   return (
     <ScrollView
-      className='flex-1 w-full bg-white'
-      contentContainerStyle={{paddingBottom: 110,}}
-      showsVerticalScrollIndicator={false}
+      className="flex-1 w-full bg-white"
+      contentContainerStyle={{
+        paddingBottom: 110,
+      }}
+      showsVerticalScrollIndicator={
+        false
+      }
     >
       <Greetings />
+
       <StatsSection />
+
       <TrendChart />
-      <MapPreview selectedKota={appliedKota} />
+
+      {/* MAP */}
+      <MapPreview
+        selectedKota={
+          appliedFilters.kota
+        }
+        filters={
+          appliedFilters
+        }
+      />
+
+      {/* FILTER */}
       <FilterSection
         filters={filters}
-        onFilterChange={setFilters}
-        onApplyFilter={handleApplyFilter}
+        onFilterChange={
+          setFilters
+        }
+        onApplyFilter={
+          handleApplyFilter
+        }
       />
+
       <RecommendationSection />
     </ScrollView>
   );

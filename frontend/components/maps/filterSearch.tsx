@@ -12,7 +12,16 @@ interface FilterPanelProps {
   onFilterChange: (filters: any) => void;
 }
 
-const wilayahOptions = ['Kecamatan', 'Kota'];
+const wilayahOptions = [
+  {
+    label: 'Kecamatan',
+    value: 'kecamatan',
+  },
+  {
+    label: 'Kota',
+    value: 'kabupaten_kota',
+  },
+];
 const kelompokOptions = ['Pensiunan', 'Pegawai Negeri', 'UMKM', 'Wirausaha'];
 
 export default function FilterPanel({ visible, onClose, filters, onFilterChange }: FilterPanelProps) {
@@ -35,7 +44,7 @@ export default function FilterPanel({ visible, onClose, filters, onFilterChange 
 
   return (
     <View 
-      className="mx-4 mt-1 rounded-2xl overflow-hidden"
+      className="mx-6 mt-1 rounded-2xl overflow-hidden"
       style={{ 
         backgroundColor: Colors.card,
         shadowColor: '#000',
@@ -58,21 +67,35 @@ export default function FilterPanel({ visible, onClose, filters, onFilterChange 
           <View className="flex-row">
             {wilayahOptions.map((option) => (
               <TouchableOpacity
-                key={option}
+                key={option.value}
                 className="px-4 py-2 rounded-lg mr-2 border"
                 style={{
-                  backgroundColor: filters.wilayah === option ? Colors.primary : Colors.card,
-                  borderColor: filters.wilayah === option ? Colors.primary : Colors.border,
+                  backgroundColor:
+                    filters.wilayah === option.value
+                      ? Colors.primary
+                      : Colors.card,
+                  borderColor:
+                    filters.wilayah === option.value
+                      ? Colors.primary
+                      : Colors.border,
                 }}
-                onPress={() => onFilterChange({ ...filters, wilayah: option })}
+                onPress={() =>
+                  onFilterChange({
+                    ...filters,
+                    wilayah: option.value,
+                  })
+                }
               >
                 <Text
                   className="text-sm font-medium"
                   style={{
-                    color: filters.wilayah === option ? 'white' : Colors.textPrimary,
+                    color:
+                      filters.wilayah === option.value
+                        ? 'white'
+                        : Colors.textPrimary,
                   }}
                 >
-                  {option}
+                  {option.label}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -119,7 +142,7 @@ export default function FilterPanel({ visible, onClose, filters, onFilterChange 
           <TouchableOpacity
             className="px-5 py-2 rounded-lg border"
             style={{ borderColor: Colors.border }}
-            onPress={() => onFilterChange({ wilayah: 'Kecamatan', kelompok: [] })}
+            onPress={() => onFilterChange({ wilayah: 'kecamatan', kelompok: [] })}
           >
             <Text 
               className="text-sm font-medium"
