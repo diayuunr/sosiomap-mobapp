@@ -12,6 +12,8 @@ import ZoneDetail from '@/components/maps/zoneDetail';
 
 import { Colors, RiskColors } from '@/constants/colors';
 import { getMapGeometry } from '@/src/services/maps.service';
+import { getWilayahStatistik } from '@/src/services/wajibPajak.service';
+import { getRekomendasi } from '@/src/services/kebijakan.service';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const DETAIL_HEIGHT = SCREEN_HEIGHT * 0.85;
@@ -40,6 +42,8 @@ export default function MapsScreen() {
   });
 
   const [selectedZone, setSelectedZone] = useState<number | null>(null);
+  const [statistikWilayah, setStatistikWilayah] = useState<any>(null);
+  const [rekomendasiWilayah, setRekomendasiWilayah] = useState<any[]>([]);
   const [detailMode, setDetailMode] = useState(false);
 
   useEffect(() => {
@@ -115,6 +119,81 @@ export default function MapsScreen() {
     }
   }, [zone, polygons]);
 
+  useEffect(() => {
+
+    const loadStatistik =
+      async () => {
+
+        if (!selectedZone) return;
+
+        try {
+
+          const result =
+            await getWilayahStatistik(
+              selectedZone
+            );
+
+          setStatistikWilayah(
+            result
+          );
+
+        } catch (error) {
+
+          console.log(
+            'STATISTIK ERROR:',
+            error
+          );
+        }
+      };
+
+    loadStatistik();
+
+  }, [selectedZone]);
+
+  useEffect(() => {
+
+    const loadRekomendasi =
+      async () => {
+
+        if (!selectedZone) return;
+
+        try {
+
+          const result =
+            await getRekomendasi(
+              selectedZone
+            );
+
+          const mapped =
+            (result || []).map(
+              (
+                item: any,
+                index: number
+              ) => ({
+                no: index + 1,
+                text:
+                  item.rekomendasi_teks ||
+                  '-',
+              })
+            );
+
+          setRekomendasiWilayah(
+            mapped
+          );
+
+        } catch (error) {
+
+          console.log(
+            'REKOMENDASI ERROR:',
+            error
+          );
+        }
+      };
+
+    loadRekomendasi();
+
+  }, [selectedZone]);
+
   const isFilterActive =
     filters.kelompok.length > 0 ||
     filters.wilayah !== 'Kecamatan' ||
@@ -181,22 +260,16 @@ export default function MapsScreen() {
       { year: '2024', value: 82 },
     ],
 
-    profilPekerjaan: [
-      { label: 'Wirausaha', value: 45, color: '#C20B0D' },
-      { label: 'UMKM', value: 35, color: '#FDD216' },
-      { label: 'Pegawai', value: 20, color: '#007BE5' },
-    ],
+    profilPekerjaan:
+      statistikWilayah
+        ?.profilPekerjaan || [],
 
-    demografiUsia: [
-      { range: '20-30', percent: 22, color: '#007BE5' },
-      { range: '31-45', percent: 38, color: '#FDD216' },
-      { range: '46-60', percent: 28, color: '#050F32' },
-    ],
+    demografiUsia:
+      statistikWilayah
+        ?.demografiUsia || [],
 
-    rekomendasi: [
-      { no: 1, text: 'Fokus edukasi kepatuhan pajak.' },
-      { no: 2, text: 'Prioritaskan monitoring pembayaran.' },
-    ],
+rekomendasi:
+  rekomendasiWilayah,
   } : null;
 
   if (loading) {

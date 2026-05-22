@@ -182,6 +182,9 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
                 style={{ 
                   borderColor: Colors.accent,
                   borderTopColor: data.profilPekerjaan[0].color,
+                  borderRightColor: data.profilPekerjaan[1]?.color || Colors.accent,
+                  borderBottomColor: data.profilPekerjaan[2]?.color || Colors.accent,
+                  borderLeftColor: data.profilPekerjaan[3]?.color || Colors.accent,
                 }}
               >
                 <Text className="text-xs font-medium" style={{ color: Colors.textMuted }}>
@@ -235,7 +238,7 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
               {data.demografiUsia.map((item: any, index: number) => (
                 <View 
                   key={index}
-                  className="items-center p-3 px-7 rounded-xl border"
+                  className="items-center p-3 px-5 rounded-xl border"
                   style={{ 
                     borderColor: item.color,
                     backgroundColor: `${item.color}10`,
