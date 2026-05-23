@@ -14,6 +14,8 @@ import { Colors, RiskColors } from '@/constants/colors';
 import { getMapGeometry } from '@/src/services/maps.service';
 import { getWilayahStatistik } from '@/src/services/wajibPajak.service';
 import { getRekomendasi } from '@/src/services/kebijakan.service';
+import { getTrendPenerimaan } from '@/src/services/trenWilayah.service';
+import { getZoneStats } from '@/src/services/zoneStats.service';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const DETAIL_HEIGHT = SCREEN_HEIGHT * 0.85;
@@ -43,7 +45,9 @@ export default function MapsScreen() {
 
   const [selectedZone, setSelectedZone] = useState<number | null>(null);
   const [statistikWilayah, setStatistikWilayah] = useState<any>(null);
+  const [zoneStats, setZoneStats] = useState<any>(null);
   const [rekomendasiWilayah, setRekomendasiWilayah] = useState<any[]>([]);
+  const [trenKepatuhan, setTrenKepatuhan] = useState<any[]>([]);
   const [detailMode, setDetailMode] = useState(false);
 
   useEffect(() => {
@@ -152,6 +156,37 @@ export default function MapsScreen() {
 
   useEffect(() => {
 
+    const loadZoneStats =
+      async () => {
+
+        if (!selectedZone) return;
+
+        try {
+
+          const result =
+            await getZoneStats(
+              selectedZone
+            );
+
+          setZoneStats(
+            result
+          );
+
+        } catch (error) {
+
+          console.log(
+            'ZONE STATS ERROR:',
+            error
+          );
+        }
+      };
+
+    loadZoneStats();
+
+  }, [selectedZone]);
+
+  useEffect(() => {
+
     const loadRekomendasi =
       async () => {
 
@@ -194,6 +229,44 @@ export default function MapsScreen() {
 
   }, [selectedZone]);
 
+  useEffect(() => {
+    const loadTrend =
+      async () => {
+
+        if (!selectedZone) return;
+
+        try {
+
+          const result =
+            await getTrendPenerimaan(
+              selectedZone
+            );
+
+          const mapped =
+            (result || []).map(
+              (item: any) => ({
+                value: item.value,
+                label: item.year,
+              })
+            );
+
+          setTrenKepatuhan(
+            mapped
+          );
+
+        } catch (error) {
+
+          console.log(
+            'TREND ERROR:',
+            error
+          );
+        }
+      };
+
+    loadTrend();
+
+  }, [selectedZone]);
+
   const isFilterActive =
     filters.kelompok.length > 0 ||
     filters.wilayah !== 'Kecamatan' ||
@@ -225,51 +298,62 @@ export default function MapsScreen() {
 
   const selectedZoneRaw = polygons.find(item => item.id === selectedZone);
 
+  const klaster =
+    selectedZoneRaw?.klaster_wilayah?.[0]?.klaster_label || 'Hijau';
+
+  const riskLevel =
+    klaster === 'Merah'
+      ? 'risiko'
+      : klaster === 'Kuning'
+      ? 'perhatian'
+      : 'stabil';
+
   const selectedZoneData = selectedZoneRaw ? {
     id: selectedZoneRaw.id,
     name: selectedZoneRaw.nama,
 
-    kelompok:
-      selectedZoneRaw.klaster_wilayah?.[0]?.klaster_label || 'Hijau',
+    kelompok: klaster,
 
-    wajibPajak: 1240,
-    pendapatan: 'Rp 2.4 M',
+    // =========================
+    // DATA DARI SERVICE
+    // =========================
 
-    riskLevel:
-      selectedZoneRaw.klaster_wilayah?.[0]?.klaster_label === 'Merah'
-        ? 'risiko'
-        : selectedZoneRaw.klaster_wilayah?.[0]?.klaster_label === 'Kuning'
-        ? 'perhatian'
-        : 'stabil',
+    wajibPajak:
+      zoneStats?.wajibPajak || 0,
+
+    pendapatan:
+      zoneStats?.pendapatan || 'Rp 0',
+
+    kepatuhan:
+      zoneStats?.kepatuhan || '0%',
+
+    tunggakan:
+      zoneStats?.tunggakan || 'Rp 0',
+
+    // =========================
+    // RISK
+    // =========================
+
+    riskLevel,
 
     riskLabel:
-      selectedZoneRaw.klaster_wilayah?.[0]?.klaster_label === 'Merah'
+      klaster === 'Merah'
         ? 'Risiko Keterlambatan Bayar: Tinggi'
-        : selectedZoneRaw.klaster_wilayah?.[0]?.klaster_label === 'Kuning'
+        : klaster === 'Kuning'
         ? 'Risiko Keterlambatan Bayar: Sedang'
         : 'Risiko Keterlambatan Bayar: Rendah',
 
-    kepatuhan: '82%',
-    tunggakan: 'Rp 320 Jt',
-
-    trenKepatuhan: [
-      { year: '2020', value: 70 },
-      { year: '2021', value: 74 },
-      { year: '2022', value: 77 },
-      { year: '2023', value: 80 },
-      { year: '2024', value: 82 },
-    ],
+    trenKepatuhan: trenKepatuhan,
 
     profilPekerjaan:
-      statistikWilayah
-        ?.profilPekerjaan || [],
+      statistikWilayah?.profilPekerjaan || [],
 
     demografiUsia:
-      statistikWilayah
-        ?.demografiUsia || [],
+      statistikWilayah?.demografiUsia || [],
 
-rekomendasi:
-  rekomendasiWilayah,
+    rekomendasi:
+      rekomendasiWilayah,
+
   } : null;
 
   if (loading) {
