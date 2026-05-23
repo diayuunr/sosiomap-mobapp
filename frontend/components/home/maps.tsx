@@ -54,7 +54,7 @@ interface MapPreviewProps {
   selectedKota: string;
 
   filters: {
-    kota: string;
+    kabupaten_kota: string;
     kecamatan: string;
     kelurahan: string;
     provinsi: string;
@@ -111,7 +111,7 @@ export default function MapPreview({
   const activeFilter =
     filters.kelurahan ||
     filters.kecamatan ||
-    filters.kota ||
+    filters.kabupaten_kota ||
     filters.provinsi;
 
   const filteredPolygons =

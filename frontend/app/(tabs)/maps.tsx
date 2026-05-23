@@ -39,7 +39,7 @@ export default function MapsScreen() {
   const [filterOpen, setFilterOpen] = useState(false);
 
   const [filters, setFilters] = useState({
-    wilayah: 'Kecamatan',
+    wilayah: 'kecamatan',
     kelompok: [] as string[],
   });
 

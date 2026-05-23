@@ -15,6 +15,7 @@ export default function HomePage() {
 
   const [filters, setFilters] =
     useState({
+      kabupaten_kota: '',
       kota: '',
       kecamatan: '',
       kelurahan: '',
@@ -57,7 +58,7 @@ export default function HomePage() {
       {/* MAP */}
       <MapPreview
         selectedKota={
-          appliedFilters.kota
+          appliedFilters.kabupaten_kota
         }
         filters={
           appliedFilters

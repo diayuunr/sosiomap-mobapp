@@ -1,28 +1,41 @@
 import { supabase } from '@/src/lib/supabase';
 
 export const getKlaster = async (filters?: any) => {
+
   let query = supabase
     .from('klaster_wilayah')
     .select(`
       *,
-      wilayah (
+      wilayah!inner (
         id,
         nama,
         tipe
       )
     `);
 
-  // filter wilayah
-  if (filters?.wilayah) {
+  // FILTER TIPE WILAYAH
+  if (
+    filters?.wilayah &&
+    filters.wilayah !== ''
+  ) {
+
     query = query.eq(
       'wilayah.tipe',
-      filters.wilayah.toLowerCase()
+      filters.wilayah
     );
   }
 
-  const { data, error } = await query;
+  const { data, error } =
+    await query;
 
-  if (error) throw error;
+  if (error) {
+    console.log(
+      'KLASTER ERROR:',
+      error
+    );
+
+    throw error;
+  }
 
   return data;
 };
