@@ -5,8 +5,8 @@ const WILAYAH_QUERY = [
   { nama: 'DENPASAR SELATAN', query: 'Denpasar Selatan, Bali' },
   { nama: 'DENPASAR TIMUR', query: 'Denpasar Timur, Bali' },
   { nama: 'KUTA', query: 'Kuta, Badung, Bali' },
-  { nama: 'KOTA DENPASAR', query: 'Denpasar, Bali' },
-  { nama: 'KABUPATEN BADUNG', query: 'Badung, Bali' },
+  { nama: 'DENPASAR', query: 'Denpasar, Bali' },
+  { nama: 'BADUNG', query: 'Badung, Bali' },
   { nama: 'BALI', query: 'Bali, Indonesia' },
   { nama: 'SIDAKARYA', query: 'Sidakarya, Denpasar Selatan, Bali' },
   { nama: 'SESETAN', query: 'Sesetan, Denpasar Selatan, Bali' },
@@ -34,7 +34,7 @@ async function updateGeom(nama, geom) {
       'apikey': SUPABASE_KEY,
       'Authorization': `Bearer ${SUPABASE_KEY}`
     },
-    body: JSON.stringify({ geom: JSON.stringify(geom) })
+    body: JSON.stringify({ geom })
   })
   return res.status
 }
