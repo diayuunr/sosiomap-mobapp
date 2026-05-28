@@ -190,10 +190,10 @@ console.log(
               <View className="w-24 h-24 rounded-full border-4 mr-4 items-center justify-center"
                 style={{ 
                   borderColor: Colors.accent,
-                  borderTopColor: data.profilPekerjaan[0]?.color || Colors.accent,
-                  borderRightColor: data.profilPekerjaan[1]?.color || Colors.accent,
-                  borderBottomColor: data.profilPekerjaan[2]?.color || Colors.accent,
-                  borderLeftColor: data.profilPekerjaan[3]?.color || Colors.accent,
+                  borderTopColor: data.profilPekerjaan[0]?.color || Colors.textMuted,
+                  borderRightColor: data.profilPekerjaan[1]?.color || Colors.textMuted,
+                  borderBottomColor: data.profilPekerjaan[2]?.color || Colors.textMuted,
+                  borderLeftColor: data.profilPekerjaan[3]?.color || Colors.textMuted,
                 }}
               >
                 <Text className="text-xs font-medium" style={{ color: Colors.textMuted }}>

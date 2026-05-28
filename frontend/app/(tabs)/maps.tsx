@@ -11,7 +11,7 @@ import ZonePeek from '@/components/maps/zonePeek';
 import ZoneDetail from '@/components/maps/zoneDetail';
 
 import { Colors, RiskColors } from '@/constants/colors';
-import { getMapGeometry } from '@/src/services/maps.service';
+import { getMapGeometry, getWilayahKelompok } from '@/src/services/maps.service';
 import { getWilayahStatistik } from '@/src/services/wajibPajak.service';
 import { getRekomendasi } from '@/src/services/kebijakan.service';
 import { getTrendPenerimaan } from '@/src/services/trenWilayah.service';
@@ -56,8 +56,12 @@ export default function MapsScreen() {
 
   const loadMap = async () => {
     try {
-      const data = await getMapGeometry();
+      const [data, kelompokMap] = await Promise.all([
+        getMapGeometry(),
+        getWilayahKelompok(),
+      ]);
       setPolygons(data || []);
+      setWilayahKelompok(kelompokMap);
     } catch (error) {
       console.log('MAP ERROR:', error);
     } finally {
@@ -184,6 +188,57 @@ export default function MapsScreen() {
     loadZoneStats();
 
   }, [selectedZone]);
+
+  const [wilayahKelompok, setWilayahKelompok] =
+  useState<Record<string, string[]>>({});
+
+  const filteredPolygons = polygons.filter((item) => {
+    // 1. Filter tipe wilayah (kecamatan / kelurahan)
+    if (item.tipe !== filters.wilayah) return false;
+
+    // 2. Filter kelompok ekonomi (jika ada yang dipilih)
+    if (filters.kelompok.length > 0) {
+      const kelompokWilayah = wilayahKelompok[String(item.id)] || [];
+      const match = filters.kelompok.some((k) => kelompokWilayah.includes(k));
+      if (!match) return false;
+    }
+
+    // 3. Filter search query
+    if (searchQuery.trim() !== '') {
+      return item.nama.toLowerCase().includes(searchQuery.toLowerCase());
+    }
+
+    return true;
+  });
+  // Auto-zoom ke hasil search kalau hanya 1 polygon yang match
+  useEffect(() => {
+    if (
+      searchQuery.trim() === '' ||
+      filteredPolygons.length !== 1 ||
+      !mapRef.current
+    ) return;
+
+    const item = filteredPolygons[0];
+    if (!item.geom) return;
+
+    try {
+      const geometry =
+        typeof item.geom === 'string' ? JSON.parse(item.geom) : item.geom;
+
+      let coords: number[][] = [];
+      if (geometry.type === 'Polygon') coords = geometry.coordinates[0];
+      if (geometry.type === 'MultiPolygon') coords = geometry.coordinates[0][0];
+
+      if (coords.length > 0) {
+        mapRef.current.fitToCoordinates(
+          coords.map((c) => ({ latitude: c[1], longitude: c[0] })),
+          { edgePadding: { top: 100, right: 100, bottom: 300, left: 100 }, animated: true }
+        );
+      }
+    } catch (e) {
+      console.log('SEARCH ZOOM ERROR:', e);
+    }
+  }, [searchQuery, filteredPolygons]);
 
   useEffect(() => {
 
@@ -363,8 +418,10 @@ export default function MapsScreen() {
       </View>
     );
   }
+  
 
   return (
+    
     <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
       <View className="flex-1">
 
