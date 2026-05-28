@@ -39,3 +39,13 @@ export const getKlaster = async (filters?: any) => {
 
   return data;
 };
+
+export const getAllWilayah = async () => {
+  const { data, error } = await supabase
+    .from('wilayah')
+    .select('id, nama, tipe, parent_id')
+    .order('nama');
+
+  if (error) throw error;
+  return data || [];
+};

@@ -9,10 +9,6 @@ import TrendChart from '@/components/home/trend';
 
 export default function HomePage() {
 
-  /**
-   * FILTER STATE
-   */
-
   const [filters, setFilters] =
     useState({
       kabupaten_kota: '',
@@ -22,17 +18,9 @@ export default function HomePage() {
       provinsi: '',
     });
 
-  /**
-   * APPLIED FILTER
-   */
-
   const [appliedFilters,
     setAppliedFilters] =
     useState(filters);
-
-  /**
-   * APPLY FILTER
-   */
 
   const handleApplyFilter =
     () => {
@@ -50,9 +38,7 @@ export default function HomePage() {
       }
     >
       <Greetings />
-
       <StatsSection />
-
       <TrendChart />
 
       {/* MAP */}
@@ -75,7 +61,6 @@ export default function HomePage() {
           handleApplyFilter
         }
       />
-
       <RecommendationSection />
     </ScrollView>
   );
