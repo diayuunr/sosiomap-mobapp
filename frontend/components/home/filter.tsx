@@ -8,7 +8,17 @@ import { getAllWilayah } from '@/src/services/filter.service';
 
 // Mapping manual provinsi → kota (karena parent_id tidak ada di DB)
 const PROVINSI_KOTA_MAP: Record<string, string[]> = {
-  'BALI': ['DENPASAR', 'BADUNG', 'GIANYAR', 'TABANAN', 'BANGLI', 'KLUNGKUNG', 'KARANGASEM', 'BULELENG', 'JEMBRANA'],
+  'BALI': [
+    'KOTA DENPASAR',
+    'KABUPATEN BADUNG',
+    'KABUPATEN GIANYAR',
+    'KABUPATEN TABANAN',
+    'KABUPATEN BANGLI',
+    'KABUPATEN KLUNGKUNG',
+    'KABUPATEN KARANGASEM',
+    'KABUPATEN BULELENG',
+    'KABUPATEN JEMBRANA',
+  ],
 };
 
 interface WilayahItem {
@@ -77,7 +87,10 @@ function FilterDropdown({
             maxHeight: 180,
           }}
         >
-          <ScrollView>
+          <ScrollView
+            nestedScrollEnabled
+            keyboardShouldPersistTaps="handled"
+          >
             {options.map((option) => (
               <TouchableOpacity
                 key={option}
