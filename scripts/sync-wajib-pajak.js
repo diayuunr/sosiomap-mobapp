@@ -48,27 +48,31 @@ async function upsertWajibPajak(rows) {
 async function syncWajibPajak() {
   console.log('Mulai sync wajib pajak...')
 
-  // Ambil semua kecamatan di Denpasar
-  const kecamatan = await simpbb('wilayah/listKecamatan', {
-    kdPropinsi: '51',
-    kdDati2: '71'
-  })
+  const kelurahanList = [
+    // Denpasar Selatan
+    { nama: 'SIDAKARYA', kdDati2: '71', kdKecamatan: '010', kdKelurahan: '001' },
+    { nama: 'SESETAN', kdDati2: '71', kdKecamatan: '010', kdKelurahan: '002' },
+    // Denpasar Timur
+    { nama: 'DANGIN PURI', kdDati2: '71', kdKecamatan: '020', kdKelurahan: '001' },
+    { nama: 'SUMERTA', kdDati2: '71', kdKecamatan: '020', kdKelurahan: '002' },
+    // Kuta
+    { nama: 'TUBAN', kdDati2: '72', kdKecamatan: '010', kdKelurahan: '001' },
+    { nama: 'LEGIAN', kdDati2: '72', kdKecamatan: '010', kdKelurahan: '002' },
+  ]
 
-  for (const kec of kecamatan) {
-    console.log(`\n Kecamatan: ${kec.nmKecamatan}`)
+  for (const kel of kelurahanList) {
+    console.log(`\nKelurahan: ${kel.nama}`)
 
-    // Ambil wilayah_id dari Supabase
-    const wilayahId = await getWilayahId(kec.nmKecamatan)
+    const wilayahId = await getWilayahId(kel.nama)
     if (!wilayahId) {
       console.log(`wilayah_id tidak ditemukan, skip`)
       continue
     }
 
-    // Ambil data wajib pajak dari SIMPBB
     const result = await simpbb('objekPajak/listDetails', {
       kdPropinsi: '51',
-      kdDati2: '71',
-      kdKecamatan: kec.kdKecamatan,
+      kdDati2: kel.kdDati2,
+      kdKecamatan: kel.kdKecamatan,
       limit: 100,
       offset: 0
     })
@@ -83,7 +87,6 @@ async function syncWajibPajak() {
     await upsertWajibPajak(rows)
     console.log(`${rows.length} wajib pajak dimasukkan`)
   }
-
   console.log('\n Sync selesai!')
 }
 

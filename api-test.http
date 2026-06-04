@@ -53,3 +53,32 @@ GET https://ebfyrbnxrlyobzssgyot.supabase.co/rest/v1/wajib_pajak?select=*
 Content-Type: application/json
 apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViZnlyYm54cmx5b2J6c3NneW90Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzODEzNzcsImV4cCI6MjA5Mzk1NzM3N30.wcOsKVRXIMuybsmUBhJKq8JUbu3rPniTAUD_UJKl_74
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViZnlyYm54cmx5b2J6c3NneW90Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzODEzNzcsImV4cCI6MjA5Mzk1NzM3N30.wcOsKVRXIMuybsmUBhJKq8JUbu3rPniTAUD_UJKl_74
+
+### List Kelurahan di Denpasar Selatan
+POST https://simpbb.technosmart.id/api/rpc/wilayah/listKelurahan
+Content-Type: application/json
+
+{
+  "json": { "kdPropinsi": "51", "kdDati2": "71", "kdKecamatan": "010" }
+}
+
+### List Kelurahan Kuta
+POST https://simpbb.technosmart.id/api/rpc/objekPajak/listDetails
+Content-Type: application/json
+
+{
+  "json": { "kdPropinsi": "51", "kdDati2": "72", "kdKecamatan": "010", "limit": 5, "offset": 0 }
+}
+
+### Cek kabupaten lain di Bali
+POST https://simpbb.technosmart.id/api/rpc/wilayah/listDati2
+Content-Type: application/json
+
+{
+  "json": { "kdPropinsi": "51" }
+}
+
+### Cek geom Gianyar
+GET https://nominatim.openstreetmap.org/search?q=Kabupaten+Gianyar+Bali+Indonesia&format=geojson&polygon_geojson=1&limit=1
+Content-Type: application/json
+

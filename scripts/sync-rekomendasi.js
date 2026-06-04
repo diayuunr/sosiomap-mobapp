@@ -48,7 +48,7 @@ async function upsertRekomendasi(rows) {
 async function syncRekomendasi() {
   console.log('Mulai generate rekomendasi...')
 
-  const wilayah = await supabaseGet('wilayah?tipe=eq.kecamatan&select=id,nama')
+  const wilayah = await supabaseGet('wilayah?tipe=in.(kecamatan,kelurahan)&select=id,nama')  
   const rows = []
 
   for (const w of wilayah) {
