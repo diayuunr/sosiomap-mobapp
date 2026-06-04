@@ -1,23 +1,105 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
-import { ChevronDown, TrendingUp } from 'lucide-react-native';
+import { ChevronDown, TrendingDown, TrendingUp } from 'lucide-react-native';
 import { LineChart } from 'react-native-gifted-charts';
-import { trendData } from '@/constants/dummyData';
 import { Colors } from '@/constants/colors';
+import { getTrendPenerimaan } from '@/src/services/tren.service';
 
 export default function TrendChart() {
-  const [selectedPeriod, setSelectedPeriod] = useState('Pilih');
+  const [selectedPeriod, setSelectedPeriod] = useState('Semua');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [trendData, setTrendData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const periods = ['Minggu Ini', 'Bulan Ini', 'Tahun Ini'];
+  useEffect(() => {
+    loadTrendData();
+  }, []);
 
-  // Transform data for gifted-charts
-  const chartData = trendData.map(item => ({
-    value: item.value,
-    label: item.date,
-  }));
+  const loadTrendData = async () => {
+    try {
+      setLoading(true);
+
+      const data =
+        await getTrendPenerimaan();
+
+      setTrendData(data || []);
+
+    } catch (error) {
+      console.log(error);
+
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const periods = ['Semua', '2022', '2023', '2024'];
+  const filteredData =
+    selectedPeriod === 'Semua'
+      ? trendData
+      : trendData.filter(
+          (item) =>
+            item.periode === selectedPeriod
+        );
+
+  const groupedData = filteredData.reduce(
+    (acc: any, item: any) => {
+
+      const year = item.periode;
+
+      if (!acc[year]) {
+        acc[year] = 0;
+      }
+
+      if (
+        item.status_bayar
+          ?.toLowerCase()
+          ?.trim() === 'lunas'
+      ) {
+        acc[year] += 1;
+      }
+
+      return acc;
+
+    },
+    {}
+  );
+
+  const chartData = Object.keys(groupedData).map(
+    (year) => ({
+      label: year,
+      value: groupedData[year],
+    })
+  );
+
+  console.log('CHART DATA:', chartData);
 
   const screenWidth = Dimensions.get('window').width;
+
+  if (loading) {
+    return (
+      <View className="px-5 py-5">
+        <Text>Loading chart...</Text>
+      </View>
+    );
+  }
+
+  const latestValue =
+    chartData[chartData.length - 1]
+      ?.value || 0;
+
+  const previousValue =
+    chartData[chartData.length - 2]
+      ?.value || 0;
+
+  const percentageChange =
+    previousValue > 0
+      ? (
+          (
+            (latestValue - previousValue) /
+            previousValue
+          ) * 100
+        ).toFixed(2)
+      : 0;
 
   return (
     <View 
@@ -38,7 +120,7 @@ export default function TrendChart() {
             className="text-base font-semibold"
             style={{ color: Colors.primary }}
           >
-            Tren Penerimaan Pajak
+            Tren Wajib Pajak
           </Text>
           <View className="flex-row items-center mt-1">
             <View 
@@ -49,7 +131,7 @@ export default function TrendChart() {
               className="text-xs"
               style={{ color: Colors.textMuted }}
             >
-              Penerimaan (Rp)
+              Jumlah Wajib Pajak
             </Text>
           </View>
         </View>
@@ -109,15 +191,32 @@ export default function TrendChart() {
           className="text-2xl font-bold"
           style={{ color: Colors.primary }}
         >
-          Rp6,8 M
+          {latestValue.toLocaleString('id-ID')} Wajib Pajak
         </Text>
         <View className="flex-row items-center ml-2">
-          <TrendingUp size={16} color={Colors.green} />
+          {
+            Number(percentageChange) >= 0 ? (
+              <TrendingUp
+                size={16}
+                color={Colors.green}
+              />
+            ) : (
+              <TrendingDown
+                size={16}
+                color="red"
+              />
+            )
+          }
           <Text 
             className="text-sm font-medium ml-1"
-            style={{ color: Colors.green }}
+            style={{
+              color:
+                Number(percentageChange) >= 0
+                  ? Colors.green
+                  : 'red',
+            }}
           >
-            0,45%
+            {percentageChange}%
           </Text>
         </View>
       </View>
@@ -127,8 +226,8 @@ export default function TrendChart() {
         data={chartData}
         height={180}
         width={screenWidth - 72}
-        spacing={40}
-        initialSpacing={40}
+        spacing={100}
+        initialSpacing={50}
         endSpacing={20}
         color={Colors.accent}
         thickness={3}
@@ -156,7 +255,7 @@ export default function TrendChart() {
           pointerStripColor: Colors.border,
           pointerStripWidth: 1,
           radius: 4,
-          shiftPointerLabelX: -25,
+          shiftPointerLabelX: -20,
           pointerLabelComponent: (items: any) => {
             return (
               <View 
@@ -164,7 +263,7 @@ export default function TrendChart() {
                 style={{ backgroundColor: Colors.accent, minWidth: 60, }}
               >
                 <Text className="px-2 py-1 text-white text-xs font-semibold" numberOfLines={1}>
-                  Rp {items[0]?.value} M
+                  {items[0]?.value} WP
                 </Text>
               </View>
             );

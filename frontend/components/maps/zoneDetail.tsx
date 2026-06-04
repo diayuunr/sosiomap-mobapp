@@ -10,10 +10,20 @@ interface ZoneDetailProps {
 }
 
 export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
-  const chartData = data.trenKepatuhan.map((item: any) => ({
-    value: item.value,
-    label: item.year,
-  }));
+const chartData =
+  data?.trenKepatuhan?.length > 0
+    ? data.trenKepatuhan
+    : [
+        {
+          value: 0,
+          label: '2024',
+        },
+      ];
+
+console.log(
+  'CHART DATA:',
+  chartData
+);
   const riskLevel = data.riskLevel as keyof typeof RiskColors;
 
   return (
@@ -64,8 +74,8 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
             <View 
               className="w-[48%] mr-[4%] mb-3 p-3 rounded-xl border items-center justify-center"
               style={{ 
-                backgroundColor: Colors.yellowLight,
-                borderColor: Colors.accent,
+                backgroundColor: `${RiskColors[riskLevel]}15`,
+                borderColor: RiskColors[riskLevel],
               }}
             >
               <View className="flex-row items-center mb-1">
@@ -83,8 +93,8 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
             <View 
               className="w-[48%] mb-3 p-3 rounded-xl border items-center justify-center"
               style={{ 
-                backgroundColor: Colors.yellowLight,
-                borderColor: Colors.accent,
+              backgroundColor: `${RiskColors[riskLevel]}15`,
+              borderColor: RiskColors[riskLevel],
               }}
             >
               <View className="flex-row items-center mb-1">
@@ -102,8 +112,8 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
             <View 
               className="w-[48%] mr-[4%] mb-3 p-3 rounded-xl border items-center justify-center"
               style={{ 
-                backgroundColor: Colors.yellowLight,
-                borderColor: Colors.accent,
+              backgroundColor: `${RiskColors[riskLevel]}15`,
+              borderColor: RiskColors[riskLevel],
               }}
             >
               <View className="flex-row items-center mb-1">
@@ -121,8 +131,8 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
             <View 
               className="w-[48%] mb-3 p-3 rounded-xl border items-center justify-center"
               style={{ 
-                backgroundColor: Colors.yellowLight,
-                borderColor: Colors.accent,
+              backgroundColor: `${RiskColors[riskLevel]}15`,
+              borderColor: RiskColors[riskLevel],
               }}
             >
               <View className="flex-row items-center mb-1">
@@ -139,10 +149,9 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
 
           {/* Risk Badge */}
           <View 
-            className="flex-row items-center self-start px-3 py-2 rounded-xl border mb-5"
+            className="flex-row items-center self-start px-3 py-2 rounded-xl mb-5"
             style={{ 
-              backgroundColor: RiskBgColors[riskLevel],
-              borderColor: RiskColors[riskLevel],
+              backgroundColor: `${RiskColors[riskLevel]}15`,
             }}
           >
             <View 
@@ -181,7 +190,10 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
               <View className="w-24 h-24 rounded-full border-4 mr-4 items-center justify-center"
                 style={{ 
                   borderColor: Colors.accent,
-                  borderTopColor: data.profilPekerjaan[0].color,
+                  borderTopColor: data.profilPekerjaan[0]?.color || Colors.textMuted,
+                  borderRightColor: data.profilPekerjaan[1]?.color || Colors.textMuted,
+                  borderBottomColor: data.profilPekerjaan[2]?.color || Colors.textMuted,
+                  borderLeftColor: data.profilPekerjaan[3]?.color || Colors.textMuted,
                 }}
               >
                 <Text className="text-xs font-medium" style={{ color: Colors.textMuted }}>
@@ -235,7 +247,7 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
               {data.demografiUsia.map((item: any, index: number) => (
                 <View 
                   key={index}
-                  className="items-center p-3 px-7 rounded-xl border"
+                  className="items-center p-3 px-5 rounded-xl border"
                   style={{ 
                     borderColor: item.color,
                     backgroundColor: `${item.color}10`,
@@ -273,14 +285,16 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
                 className="text-md font-semibold"
                 style={{ color: Colors.textPrimary }}
               >
-                TREN KEPATUHAN 5 TAHUN
+                TREN KEPATUHAN
               </Text>
             </View>
 
             <LineChart
               data={chartData}
               height={150}
-              spacing={60}
+              spacing={100}
+              maxValue={100}
+              noOfSections={4}
               initialSpacing={20}
               color={Colors.accent}
               thickness={2}
@@ -297,7 +311,8 @@ export default function ZoneDetail({ data, onClose }: ZoneDetailProps) {
               yAxisLabelSuffix="%"
               showValuesAsDataPointsText
               textColor={Colors.accent}
-              textFontSize={10}
+              textFontSize={12}
+              textShiftY={-10}
             />
           </View>
 

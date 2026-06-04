@@ -16,6 +16,8 @@ interface ZonePeekProps {
 }
 
 export default function ZonePeek({ data, onExpand }: ZonePeekProps) {
+  const riskLevel = data.riskLevel as keyof typeof RiskColors;
+
   return (
     <TouchableOpacity
       className="mb-4 rounded-t-2xl overflow-hidden"
@@ -59,8 +61,8 @@ export default function ZonePeek({ data, onExpand }: ZonePeekProps) {
           <View 
             className="flex-1 mr-2 p-3 rounded-xl border items-center justify-center"
             style={{ 
-              backgroundColor: Colors.yellowLight,
-              borderColor: Colors.accent,
+                backgroundColor: `${RiskColors[riskLevel]}15`,
+                borderColor: RiskColors[riskLevel],
             }}
           >
             <View className="flex-row items-center mb-1">
@@ -83,8 +85,8 @@ export default function ZonePeek({ data, onExpand }: ZonePeekProps) {
           <View 
             className="flex-1 ml-2 p-3 rounded-xl border items-center justify-center"
             style={{ 
-              backgroundColor: Colors.yellowLight,
-              borderColor: Colors.accent,
+              backgroundColor: `${RiskColors[riskLevel]}15`,
+              borderColor: RiskColors[riskLevel],
             }}
           >
             <View className="flex-row items-center mb-1">

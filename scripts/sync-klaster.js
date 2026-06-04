@@ -28,7 +28,8 @@ async function upsertKlaster(rows) {
 async function syncKlaster() {
   console.log('Mulai klasterisasi wilayah...')
 
-  const wilayah = await supabaseGet('wilayah?select=id,nama,tipe')
+  // Ambil semua wilayah kecamatan
+  const wilayah = await supabaseGet('wilayah?tipe=in.(kecamatan,kabupaten_kota)&select=id,nama,tipe')
   console.log(`Total wilayah: ${wilayah.length}`)
 
   const periode = ['2022', '2023', '2024']

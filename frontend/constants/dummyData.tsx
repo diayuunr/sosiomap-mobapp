@@ -250,7 +250,7 @@ export const klasterOptions = [
 ];
 
 export const laporanContent = {
-  title: 'Laporan Triwulan I 2026',
+  title: 'Laporan Triwulan',
   subtitle: '12 Kecamatan - Semua Klaster',
   items: [
     'Distribusi Klaster Ekonomi & Populasi Wajib Pajak',
@@ -259,3 +259,34 @@ export const laporanContent = {
     'Rekomendasi Kebijakan per Kelompok',
   ],
 };
+
+export const laporanItems = [
+  {
+    no: 1,
+    kategori: 'Distribusi Klaster Ekonomi & Populasi Wajib Pajak',
+    cakupan: '12 Kecamatan',
+    status: 'Lengkap',
+    keterangan: 'Data wajib pajak aktif & persebaran ekonomi berhasil dianalisis',
+  },
+  {
+    no: 2,
+    kategori: 'Tingkat Kepatuhan & Tren Historis',
+    cakupan: 'Triwulan I 2026',
+    status: 'Stabil',
+    keterangan: 'Terjadi peningkatan kepatuhan sebesar 8% dibanding periode sebelumnya',
+  },
+  {
+    no: 3,
+    kategori: 'Ringkasan Tunggakan per Zona',
+    cakupan: 'Zona Risiko Tinggi',
+    status: 'Perlu Tindak Lanjut',
+    keterangan: 'Ditemukan peningkatan tunggakan pada 3 kecamatan prioritas',
+  },
+  {
+    no: 4,
+    kategori: 'Rekomendasi Kebijakan per Kelompok',
+    cakupan: 'Semua Klaster',
+    status: 'Disusun',
+    keterangan: 'Kebijakan difokuskan pada edukasi & pengawasan wajib pajak baru',
+  },
+];

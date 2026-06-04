@@ -1,7 +1,7 @@
 import HeaderExport from '@/components/export/header';
 import KlasterSelector from '@/components/export/klaster';
 import PeriodeSelector from '@/components/export/periode';
-import { klasterOptions, periodeOptions, laporanContent } from '@/constants/dummyData';
+import { klasterOptions, periodeOptions, laporanContent, laporanItems } from '@/constants/dummyData';
 import { Alert, ScrollView } from 'react-native';
 import { useState } from 'react';
 import LaporanPreview from '@/components/export/laporanPreview';
@@ -37,15 +37,19 @@ export default function ExportPage() {
 
   const handleExport = async () => {
     try {
-      const rows = laporanContent.items
-        .map(
-          (item) => `
-            <tr>
-              <td>${item}</td>
-            </tr>
-          `
-        )
-        .join('');
+    const rows = laporanItems
+      .map(
+        (item) => `
+          <tr>
+            <td>${item.no}</td>
+            <td>${item.kategori}</td>
+            <td>${item.cakupan}</td>
+            <td>${item.status}</td>
+            <td>${item.keterangan}</td>
+          </tr>
+        `
+      )
+      .join('');
 
       const html = `
         <html>
@@ -60,6 +64,7 @@ export default function ExportPage() {
               h1 {
                 font-size: 24px;
                 margin-bottom: 4px;
+                color: #2563eb;
               }
 
               p {
@@ -69,21 +74,39 @@ export default function ExportPage() {
 
               .info {
                 margin-bottom: 20px;
+                padding: 16px;
+                background: #f9fafb;
+                border-radius: 12px;
+                line-height: 24px;
               }
 
               table {
                 width: 100%;
                 border-collapse: collapse;
+                overflow: hidden;
+                border-radius: 12px;
               }
 
               th {
-                background: #f3f4f6;
+                background: #2563eb;
+                color: white;
               }
 
               th, td {
                 border: 1px solid #ddd;
-                padding: 12px;
+                padding: 14px;
                 text-align: left;
+              }
+
+              tr:nth-child(even) {
+                background: #f9fafb;
+              }
+
+              .footer {
+                margin-top: 30px;
+                font-size: 12px;
+                color: #888;
+                text-align: center;
               }
             </style>
           </head>
@@ -100,6 +123,7 @@ export default function ExportPage() {
                   (p) => p.id === selectedPeriode
                 )?.label
               }
+
               <br />
 
               <strong>Klaster:</strong>
@@ -107,13 +131,24 @@ export default function ExportPage() {
             </div>
 
             <table>
-              <tr>
-                <th>Kategori</th>
-                <th>Jumlah</th>
-              </tr>
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Kategori</th>
+                  <th>Cakupan</th>
+                  <th>Status</th>
+                  <th>Keterangan</th>
+                </tr>
+              </thead>
 
-              ${rows}
+              <tbody>
+                ${rows}
+              </tbody>
             </table>
+
+            <div class="footer">
+              Dibuat otomatis oleh sistem export laporan
+            </div>
           </body>
         </html>
       `;
